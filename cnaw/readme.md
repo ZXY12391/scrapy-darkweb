@@ -1,0 +1,3 @@
+1.cabyc是长安不夜城的爬虫，用的是登陆后获取的Authorization，但Authorization每天都在変，采用javascript动态加载，获取的页面无HTML信息，因此访问JSON数据的API：http://cabyceogpsji73sske5nvo45mdrkbz4m3qd3iommf3zaaa6izg3j2cqd.onion
+2.zwaww是暗网中文交易市场的爬虫，该网站每次登陆，刷新，点击后的URL都不一样，所以翻页按照正常逻辑会出现无限循环问题，登陆采用selenium，不用担心cookie问题：http://mxxxxxxxs4uqwd6cylditj7rh7zaz2clh7ofgik2z5jpeq5ixn4ziayd.onion
+3.zwaw是暗网中文交易市场的爬虫，用的是获取到的cookie，但该网站的cookie每天都不一样，而且登陆页面的URL也经常更换。
