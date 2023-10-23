@@ -56,6 +56,29 @@ class Login1Middleware:
             if spider.name == 'zwaw':
                 request.cookies = self.cookie
             #print(request.cookies)
+
+class Login4Middleware:
+    # Not all methods need to be defined. If a method is not defined,
+    # scrapy acts as if the downloader middleware does not modify the
+    # passed objects.
+        def __init__(self):
+            # 登陆后获得的 Cookie 字符串
+            cookie_string = "PHPSESSID=0riq2kbugjo3c7scd65ocnrs2i; pc_333f7gpuishjximodvynnoisxujicgwaetzywgkxoxuje5ph3qyqjuid_onion__XSRF-TOKEN=eyJpdiI6Im9ublpMUmpwMGdyQ0xjWUVoNWhoc1E9PSIsInZhbHVlIjoiUk1YNThrbEo3SlBvUXdBMVR2RzRqUXJ5MTNVREtZckxpbDhIWlRZakV3cUFERDA1dnliYXFvVlRJWHRWSkVITjUrZXRyK29hMUIxRzRXcmxtSEpRbkNNVk9FODhXajJ3aHhMVlAyZEtLN09TajlWbXRFK3ZjcFFwM05rdERXb2wiLCJtYWMiOiJkMWUxNmE4YWIwNTI5YzFjNWNhZTNmZjQxYTczMmU0Y2Y3OTUxMzMwYjkwMDllZTY1NzdmYjY5ZmQ0NzQ4NjJhIn0%3D; pc_333f7gpuishjximodvynnoisxujicgwaetzywgkxoxuje5ph3qyqjuid_onion__hr4ujvby8ds459og4kzcpbzwjdj_session=eyJpdiI6Im9zRkwwdHNcL0dCYlN1cGcwSHJTSWN3PT0iLCJ2YWx1ZSI6Imd0ZkcwMUFJKzRTa1ZqSkRrQ2VHejkyWlJDMHBkS3VlTVN3U0lidWJuaFZGYk9UMXZ0bzJ1QmxTTGV5Wjd2MGJKaWRxQ1N0S21cL0RTMlFlSHJFZWc0d2t3Wk1mSmU3QjRnekROT1ZRUCtYOFZvelJ5XC8waWR2cGpaWjJVdVB5TjUiLCJtYWMiOiIzYmI1MzdiNDg1N2NmNzVhYjVlNTQyNTVkNDM2M2Y1YWRlYjEyODBlODYzNmI1OWE4ZTEzYTliODc4MGIwYTkxIn0%3D"
+            #print("zzzzz")
+
+            # 将 Cookie 字符串分割成键值对
+            cookie_pairs = cookie_string.split('; ')
+            #print(cookie_pairs)
+            # 创建一个字典来存储 Cookie 键值对
+            self.cookie = {}
+            for pair in cookie_pairs:
+                key, value = pair.strip().split('=')
+                self.cookie[key] = value
+            print(self.cookie)
+        def process_request(self, request, spider):
+            if spider.name == 'torrez':
+                request.cookies = self.cookie
+            #print(request.cookies)
 class UAMiddleware:
 
     def process_request(self, request, spider):

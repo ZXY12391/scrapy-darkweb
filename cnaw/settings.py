@@ -57,7 +57,8 @@ DOWNLOADER_MIDDLEWARES = {
     "cnaw.middlewares.Login2Middleware": 542,
     "cnaw.middlewares.ProxyMiddleware":250,
     "cnaw.middlewares.UAMiddleware":299,
-    "cnaw.middlewares.Login3Middleware":297
+    "cnaw.middlewares.Login3Middleware":297,
+    "cnaw.middlewares.Login4Middleware": 542,
 
 }
 #LOG_LEVEL="WARNING"
@@ -104,7 +105,7 @@ FEED_EXPORT_ENCODING = "utf-8"
 MongoDB={
     "host":"localhost",
     "port":27017,
-    "collection":'test'
+    "collection":'torrez'
 }
 #暗网中文网用户名和登录名
 Info1={ "userName1":1896236,
@@ -114,7 +115,7 @@ Info1={ "userName1":1896236,
 #redis相关配置
 REDIS_HOST="127.0.0.1"
 REDIS_PORT=6379
-REDIS_DB=3
+REDIS_DB=4
 
 REDIS_PARAMS={
     "password":"wenyan",

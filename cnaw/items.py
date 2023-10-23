@@ -17,4 +17,4 @@ class CnawItem(scrapy.Item):
     Title=scrapy.Field()
     Fetch_time=scrapy.Field()
     Price=scrapy.Field()
-    pass
+
