@@ -26,7 +26,7 @@ CONCURRENT_REQUESTS = 32
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 2
+DOWNLOAD_DELAY = 2
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 16
 CONCURRENT_REQUESTS_PER_IP = 16
@@ -62,7 +62,7 @@ DOWNLOADER_MIDDLEWARES = {
     "cnaw.middlewares.Login6Middleware": 251,
     "cnaw.middlewares.Login7Middleware": 252,
     "cnaw.middlewares.Login8Middleware": 253,
-    "cnaw.middlewares.Login9Middleware": 253,
+    "cnaw.middlewares.Login9Middleware": 254,
 
 }
 #LOG_LEVEL="WARNING"
@@ -109,7 +109,7 @@ FEED_EXPORT_ENCODING = "utf-8"
 MongoDB={
     "host":"localhost",
     "port":27017,
-    "collection":'ASAP'
+    "collection":'KINGDOM'
 }
 #暗网中文网用户名和登录名
 Info1={ "userName1":1896236,

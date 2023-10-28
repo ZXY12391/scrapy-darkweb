@@ -6,6 +6,7 @@ from scrapy.linkextractors import LinkExtractor
 from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT
 from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
 import redis
+import os
 class KingdomSpider(RedisSpider):
     name = "kingdom"
 
@@ -45,18 +46,6 @@ class KingdomSpider(RedisSpider):
     def parse_good_url(self,response):
         print(f"访问第{response.url}页")
         type=response.meta.get('type')
-        #置顶的为毒药药片
-        """divs=response.xpath("//div[@class='box-cont']/div[@class='row']/div")
-        for div in divs:
-            href=div.xpath("./div/div/a/@href").extract_first()
-            print(f"{type}:{href}")
-            yield scrapy.Request(
-                url=response.urljoin(href),
-                callback=self.parse_good_detail,
-                meta={
-                    'type': type,
-                }
-            )"""
         div2s=response.xpath("//div[@id='p0']/div/div")
         for div in div2s:
             href=div.xpath("./div[@class='col-md-7']/a[1]/@href").extract_first()
@@ -86,6 +75,9 @@ class KingdomSpider(RedisSpider):
         # 使用join()方法将文本元素合并为一个字符串
         title = ''.join(title_elements)
         title=title.strip()
+        if not title:
+            # 如果标题为空，将HTML内容保存到本地
+            self.save_html_to_file(response, 'empty_title.html')
         content = response.xpath("//*[@id='descriptionContent']/text()").extract_first()
         price = response.xpath("(//div[@class='col-md-8'])[2]/div[@class='box-cont']/div/div[last()]/text()").extract_first()
         publish_time=response.xpath("/html/body/div/div/div[3]/div[2]/form/div[2]/div[2]/div[1]/div[14]/text()").extract_first()
@@ -103,6 +95,19 @@ class KingdomSpider(RedisSpider):
         item['Fetch_time'] = fetch_time
         item['Url'] = url
         yield item
+
+    def save_html_to_file(self, response, filename):
+        # 文件保存目录
+        save_dir = 'html_debug/'
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+
+        # 构建完整的文件路径
+        file_path = os.path.join(save_dir, filename)
+
+        # 保存HTML内容到文件
+        with open(file_path, 'wb') as file:
+            file.write(response.body)
 
 
 
