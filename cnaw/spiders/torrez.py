@@ -2,108 +2,102 @@ import scrapy
 import re
 import datetime
 from cnaw.items import CnawItem
-from cnaw.settings import REDIS_DB,REDIS_HOST,REDIS_PORT,REDIS_PARAMS
+from cnaw.settings import REDIS_DB, REDIS_HOST, REDIS_PORT
 import redis
-from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
+from scrapy_redis.spiders import RedisSpider
+from scrapy.linkextractors import LinkExtractor
+
 class TorrezSpider(RedisSpider):
     name = "torrez"
     redis_key = "search_url"
+    good_num1 = {}
+    good_num2 = {}
+
     def __init__(self, *args, **kwargs):
         super(TorrezSpider, self).__init__(*args, **kwargs)
+        self.page_count = {}  # 创建一个字典用于存储每种商品类型的页码计数
         url = 'http://mmd32xdcmzrdlpoapkpf43dxig5iufbpkkl76qnijgzadythu55fvkqd.onion/home'
-        # 请替换为您自己的Redis连接信息
         redis_host = REDIS_HOST
         redis_port = REDIS_PORT
         redis_db = REDIS_DB
-        redis_password = REDIS_PARAMS.get('password')
-        redis_conn = redis.StrictRedis(host=redis_host, password=redis_password, port=redis_port, db=redis_db)
+        redis_conn = redis.StrictRedis(host=redis_host, port=redis_port, db=redis_db)
         redis_conn.lpush('search_url', url)
 
     def parse(self, response):
-        #print(response.text)
-        ul=response.xpath("//ul[@class='sidebar'][1]/li")
+        ul = response.xpath("//ul[@class='sidebar'][1]/li")
         for li in ul:
-            href=li.xpath("./a/@href").extract_first()
-            type=li.xpath("./a/text()").extract_first()
-            type = type.strip()
-            #num=li.xpath("./a/span/text()").extract_first()
-            #print(f"{type}:{href}")
-            #print(num)
-            yield scrapy.Request(
-                url=response.urljoin(href),
-                callback=self.parse_type_url,
-                meta={
-                    'type':type
-                }
-            )
+            href = li.xpath("./a/@href").extract_first()
+            product_type = li.xpath("./a/text()").extract_first().strip()
 
+            if product_type not in ['Drugs and Chemicals', 'Tutorials and e-books', 'Counterfeit']:
+                # 初始化页码计数值和两个商品计数值为0
+                self.page_count[product_type] = 0
+                self.good_num1[product_type] = 0
+                self.good_num2[product_type] = 0
+                yield scrapy.Request(
+                    url=response.urljoin(href),
+                    callback=self.parse_goods_url,
+                    meta={
+                        'type': product_type,
+                    }
+                )
 
-    def parse_type_url(self, response):
-        #翻页
-        type=response.meta.get('type')
-        max_page_href = response.xpath("//div[@class='col-sm-12 mt-3']/ul/li[last()-1]/a/@href").extract_first()
-        #print(max_page_href)
-        try:
-            # 使用正则表达式提取基础URL和页码
-            match = re.search(r'^(.*?page=)(\d+)$', max_page_href)
-            if match:
-                base_url = match.group(1)  # 提取基础URL
-                max_page_number = int(match.group(2) if match.group(2) else 1)  # 提取最大页码，默认为1
-                #print("基础URL:", base_url)
-                #print("最大页码:", max_page_number)
-                # 生成最大页之前的页码URL
-                for i in range(1, max_page_number + 1):
-                    page_url = f"{base_url}{i}"
-                    #print(page_url)
-                    yield scrapy.Request(
-                        url=page_url,
-                        callback=self.parse_goods_url,
-                        meta={
-                            'type': type
-                        }
-                    )
-        except Exception as e:
-            # 处理异常，例如记录错误信息
-            print("发生异常:", str(e))
+    def parse_goods_url(self, response):
+        product_type = response.meta.get('type')
+        # 增加页码计数值
+        self.page_count[product_type] += 1
+        current_page = self.page_count[product_type]
+        print(f"Scraping {product_type}, Page {current_page}: {response.url}")
 
-    def parse_goods_url(self,response):
-        #print(response.url)
-        type = response.meta.get('type')
-        #解析每页的每个商品的URL
+        # 解析商品URL和翻页逻辑
+
         trs = response.xpath("//table[@class='table table-custom table-listings']/tbody/tr")
         for tr in trs:
             href = tr.xpath("./td[2]/a/@href").extract_first()
-            title = tr.xpath("./td[2]/a/text()").extract_first()
-            # print(f"{title}:{href}")
+            # 增加已抓取商品计数值
+            self.good_num1[product_type] += 1
+            current_good_num1 = self.good_num1[product_type]
+            print(f"{product_type}: 第{current_good_num1}个准备抓取商品：{response.urljoin(href)}")
+            # 具体的商品URL解析逻辑
             yield scrapy.Request(
                 url=response.urljoin(href),
                 callback=self.parse_goods_detail,
                 meta={
-                    'type': type
+                    'type': product_type,
                 }
             )
-    def parse_goods_detail(self,response):
+
+        # 翻页逻辑
+        page_le = LinkExtractor(restrict_xpaths=("//a[@class='page-link']",))
+        page_links = page_le.extract_links(response)
+        for page in page_links:
+            yield scrapy.Request(
+                url=page.url,
+                callback=self.parse_goods_url,
+                meta={
+                    'type': product_type,
+                }
+            )
+
+    def parse_goods_detail(self, response):
         publish_time = None
-        price_with_dollar_sign = response.xpath("//span[@class='itemPrice']/text()").extract_first()
-        price = price_with_dollar_sign.replace("$", "")
-        fetch_time = datetime.datetime.now()
-        type = response.meta.get('type')
+        price = response.xpath("//span[@class='itemPrice']/text()").extract_first()
+        product_type = response.meta.get('type')
         title = response.xpath("//div[@class='titleHeader mb-2'][1]/h3/text()").extract_first()
         url = response.url
-        content=response.xpath("//div[@class='tab-pane active']/p/text()").extract_first()
+        content = response.xpath("//div[@class='tab-pane active']/p/text()").extract_first()
         source = "torrez"
         item = CnawItem()
         item['Source'] = source
-        item['Type'] = type
+        item['Type'] = product_type
         item['Title'] = title
         item['Content'] = content
         item['Price'] = price
         item['Publish_time'] = publish_time
-        item['Fetch_time'] = fetch_time
+        item['Fetch_time'] = datetime.datetime.now()
         item['Url'] = url
+        # 增加未抓取商品计数值
+        self.good_num2[product_type] += 1
+        current_good_num2 = self.good_num2[product_type]
+        print(f"{product_type}: 第{current_good_num2}个实际抓取商品：{url}")
         yield item
-
-
-
-
-

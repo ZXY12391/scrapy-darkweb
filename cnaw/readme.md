@@ -13,7 +13,6 @@
 PIN：haha
 从 2023 年 2 月 20 日起，市场部分仅向余额达到或超过 50 美元的用户开放。  带来不便敬请谅解。
 5.https://torrezmarkets.com/
-
 用户名：wenyan
 密码：torrezpass
 PIN：torrez
@@ -22,3 +21,16 @@ cookie=PHPSESSID=0riq2kbugjo3c7scd65ocnrs2i; pc_333f7gpuishjximodvynnoisxujicgwa
 http://freedxxxrbrtxigoiyf333cradalwequhwocpv5wime7cxkrsk2bidqd.onion/index.php?m=u&c=login
 用户名：wenyan
 密码：freecitypass
+7.复仇女神市场
+介绍：https://nemesismarket.net/
+8.ASAP
+http://asap4g7boedkl3fxbnf2unnnr6kpxnwoewzw4vakaxiuzfdo5xpmy6ad.onion/
+介绍：https://livedarknet.com/p/the-best-deep-web-markets-for-2022/
+9.Bohemia
+http://6rdk3rjnecd4qaazmupavufxuge3j2ug667tgrn4r6mkkjz4srt456yd.onion/member?action=register
+密码：Bohemiapass1
+10.KINGDOMPASS
+密码：kingdonpass
+pin:123456
+username:wenyan
+

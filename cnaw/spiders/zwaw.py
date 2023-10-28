@@ -88,8 +88,7 @@ class ZwawSpider(RedisSpider):
                 url=response.urljoin(page.url),
                 callback=self.parse_url_detail,
                 meta={
-                    'page':page.text
-                }
+                    'page':page.text}
             )
             print(f"访问第{page.text}页")
 
