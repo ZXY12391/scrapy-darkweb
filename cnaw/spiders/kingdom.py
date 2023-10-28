@@ -9,7 +9,7 @@ import redis
 import os
 class KingdomSpider(RedisSpider):
     name = "kingdom"
-
+    num=0
     #start_urls = ["https://kingdom4it4wzkkud2p2esvashyynvmsrbyuk4qh2bnyvcnoafyvoiyd.onion.is/?t=31832a84d397c3c1"]
     redis_key = "search_url"
 
@@ -49,7 +49,7 @@ class KingdomSpider(RedisSpider):
         div2s=response.xpath("//div[@id='p0']/div/div")
         for div in div2s:
             href=div.xpath("./div[@class='col-md-7']/a[1]/@href").extract_first()
-            print(f"{type}:{href}")
+            #print(f"{type}:{href}")
             yield scrapy.Request(
                 url=response.urljoin(href),
                 callback=self.parse_good_detail,
@@ -77,7 +77,9 @@ class KingdomSpider(RedisSpider):
         title=title.strip()
         if not title:
             # 如果标题为空，将HTML内容保存到本地
-            self.save_html_to_file(response, 'empty_title.html')
+            self.save_html_to_file(response, f'empty_title{self.num}.html')
+            self.num=self.num+1
+            #print(response.text)
         content = response.xpath("//*[@id='descriptionContent']/text()").extract_first()
         price = response.xpath("(//div[@class='col-md-8'])[2]/div[@class='box-cont']/div/div[last()]/text()").extract_first()
         publish_time=response.xpath("/html/body/div/div/div[3]/div[2]/form/div[2]/div[2]/div[1]/div[14]/text()").extract_first()

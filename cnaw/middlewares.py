@@ -300,7 +300,7 @@ class Login9Middleware:
     # passed objects.
         def __init__(self):
             # 登陆后获得的 Cookie 字符串
-            cookie_string = "PHPSESSID=cf5cimj0blighug98svmbg2cud"
+            cookie_string = "PHPSESSID=45logbg3ahponp530dhaf88umo"
             # 将 Cookie 字符串分割成键值对
             cookie_pairs = cookie_string.split('; ')
             #print(cookie_pairs)

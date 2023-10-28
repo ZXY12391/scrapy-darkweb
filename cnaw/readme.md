@@ -30,7 +30,8 @@ http://asap4g7boedkl3fxbnf2unnnr6kpxnwoewzw4vakaxiuzfdo5xpmy6ad.onion/
 http://6rdk3rjnecd4qaazmupavufxuge3j2ug667tgrn4r6mkkjz4srt456yd.onion/member?action=register
 密码：Bohemiapass1
 10.KINGDOMPASS
-密码：kingdonpass
+密码：kingdompass
 pin:123456
-username:wenyan
+username:kingdomwenyan
+phrase:ZXCV
 
