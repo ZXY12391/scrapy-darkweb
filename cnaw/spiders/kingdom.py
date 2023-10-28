@@ -4,8 +4,9 @@ import datetime
 from cnaw.items import CnawItem
 from scrapy.linkextractors import LinkExtractor
 from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT
+from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
 import redis
-class KingdomSpider(scrapy.Spider):
+class KingdomSpider(RedisSpider):
     name = "kingdom"
 
     #start_urls = ["https://kingdom4it4wzkkud2p2esvashyynvmsrbyuk4qh2bnyvcnoafyvoiyd.onion.is/?t=31832a84d397c3c1"]
