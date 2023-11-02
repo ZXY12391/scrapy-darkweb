@@ -7,17 +7,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from scrapy import signals
 from selenium import webdriver
-import ddddocr
-import base64
-# useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
-import time
-from selenium.webdriver import Chrome
-from selenium.webdriver import Firefox
 from random import choice
 from cnaw.settings import USER_AGENT_LIST
 import redis
-from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
+
 from cnaw.settings import REDIS_DB,REDIS_HOST,REDIS_PORT,REDIS_PARAMS
 class ProxyMiddleware:
     def process_request(self, request, spider):
@@ -147,7 +140,7 @@ class LoginZwawwMiddleware:
         if spider.name == 'zwaww':
             if not request.cookies:  # 简单判断是否有cookie，没有的话就设置一下
                 request.cookies = self.cookie
-                print(request.cookies)
+                #print(request.cookies)
             return None
 
     def spider_opened(self, spider):
@@ -232,7 +225,7 @@ class LoginFreeforumMiddleware:
         if spider.name == 'freeforum':
             if not request.cookies:  # 简单判断是否有cookie，没有的话就设置一下
                 request.cookies = self.cookie
-                print(request.cookies)
+                #print(request.cookies)
             return None
 
     def spider_opened(self, spider):
@@ -290,7 +283,7 @@ class LoginNemesisMiddleware:
         if spider.name == 'nemesis':
             if not request.cookies:  # 简单判断是否有cookie，没有的话就设置一下
                 request.cookies = self.cookie
-                print(request.cookies)
+                #print(request.cookies)
             return None
 
     def spider_opened(self, spider):

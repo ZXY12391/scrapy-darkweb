@@ -7,7 +7,6 @@ from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT
 import redis
 class NemesisSpider(RedisSpider):
     name = "nemesis"
-    #start_urls = ["http://wvp2anhcslscv7tg3kpbdf2oklhaelhla72l3nkzndubqrjldrjai3id.onion"]
     redis_key = "search_url"
     def __init__(self, *args, **kwargs):
         super(NemesisSpider, self).__init__(*args, **kwargs)
@@ -32,13 +31,8 @@ class NemesisSpider(RedisSpider):
                 yield scrapy.Request(
                                url=response.urljoin(href),
                                callback=self.parse_good_url,
-                                meta={
-                                    'type': type,
-                                }
                 )
     def parse_good_url(self,response):
-        print(f"访问第{response.url}页")
-        type = response.meta.get('type')
         divs=response.xpath("//div[@class='row g-5 g-xl-5']/div")
         for div in divs:
             href=div.xpath("./div/div[1]/div[2]/a/@href").extract_first()
@@ -46,9 +40,6 @@ class NemesisSpider(RedisSpider):
             yield scrapy.Request(
                 url=response.urljoin(href),
                 callback=self.parse_goods_detail,
-                meta={
-                    'type': type,
-                }
             )
         #翻页
         page_le = LinkExtractor(restrict_xpaths=("//ul[@class='pagination']/li/a",))
@@ -57,9 +48,6 @@ class NemesisSpider(RedisSpider):
             yield scrapy.Request(
                 url=response.urljoin(page.url),
                 callback=self.parse_good_url,
-                meta={
-                    'type': type,
-                }
             )
 
     def parse_goods_detail(self,response):
@@ -82,8 +70,11 @@ class NemesisSpider(RedisSpider):
         fetch_time = datetime.datetime.now()
         source = 'nemesis'
         url = response.url
-        type = response.meta.get('type')
-        print(f"已经爬取{type}的商品{url}")
+        type1 = response.xpath("//div[@class='fs-7 py-1']/a[1]/text()").extract_first()
+        type2 = response.xpath("//div[@class='fs-7 py-1']/a[2]/text()").extract_first()
+        type = []
+        type.append(type1)
+        type.append(type2)
         item = CnawItem()
         item['Source'] = source
         item['Type'] = type

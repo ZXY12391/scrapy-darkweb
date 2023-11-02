@@ -7,7 +7,6 @@ from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT
 import redis
 class MgmgrandSpider(RedisSpider):
     name = "MGMGrand"
-
     #start_urls = ["http://duysanjqxo4svh35yqkxxe5r54z2xc5tjf6r3ichxd3m2rwcgabf44ad.onion/#subscribe-modal"]
     redis_key = "search_url"
     def __init__(self, *args, **kwargs):
@@ -35,21 +34,14 @@ class MgmgrandSpider(RedisSpider):
                 yield scrapy.Request(
                     url=response.urljoin(href),
                     callback=self.parse_good_url,
-                    meta={
-                        'type': type,
-                    }
                 )
     def parse_good_url(self,response):
-        type=response.meta.get('type')
         divs=response.xpath("//div[@class='list-products  columns-3']/div")
         for div in divs:
             href=div.xpath("./div[1]/a/@href").extract_first()
             yield scrapy.Request(
                 url=response.urljoin(href),
                 callback=self.parse_good_deatil,
-                meta={
-                    'type': type,
-                }
             )
             # 翻页
             page_le = LinkExtractor(restrict_xpaths=("//ul[@class='pagination mb-0']/li/a",))
@@ -58,14 +50,11 @@ class MgmgrandSpider(RedisSpider):
                 yield scrapy.Request(
                     url=response.urljoin(page.url),
                     callback=self.parse_good_url,
-                    meta={
-                        'type': type,
-                    }
                 )
 
     def parse_good_deatil(self,response):
         title = response.xpath("//h1[@class='normal-title c-fs-3']/text()").extract_first()
-        type1=response.met.get('type')
+        type1 = response.xpath("//div[@class='c-breadcrumb']/a[3]/text()").extract_first()
         type2 = response.xpath("//div[@class='c-breadcrumb']/a[4]/text()").extract_first()
         type=[]
         type.append(type1)

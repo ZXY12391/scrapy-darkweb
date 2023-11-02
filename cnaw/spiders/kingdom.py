@@ -44,11 +44,14 @@ class KingdomSpider(RedisSpider):
                     )
 
     def parse_good_url(self,response):
-        print(f"访问第{response.url}页")
-        type=response.meta.get('type')
         div2s=response.xpath("//div[@id='p0']/div/div")
         for div in div2s:
             href=div.xpath("./div[@class='col-md-7']/a[1]/@href").extract_first()
+            type1=response.meta.get('type')
+            type2=div.xpath("./div[@class='col-md-7']/a[2]/text()").extract_first()
+            type=[]
+            type.append(type1)
+            type.append(type2)
             #print(f"{type}:{href}")
             yield scrapy.Request(
                 url=response.urljoin(href),

@@ -29,31 +29,24 @@ class AsapSpider(RedisSpider):
             else:
                 #href=li.xpath("./a/@href").extract_first()
                 type=li.xpath("./a/text()").extract_first().strip()
-            print(type)
+            #print(type)
             if type in ['Fraud','Digital goods']:
                 #print(f"{type}:{href}")
                 hrefs=li.xpath("./section/ul/li/a/@href").extract()
                 for href in hrefs:
-                    print(href)
+                    #print(href)
                     yield scrapy.Request(
                         url=response.urljoin(href),
                         callback=self.parse_good_url,
-                        meta={
-                            'type': type,
-                        }
                     )
 
     def parse_good_url(self, response):
-        type=response.meta.get('type')
         a=response.xpath("//div[@class='clr-col-lg-4 clr-col-md-6 card-search-listing']//span[@class='card-media-title']/a/@href").extract()
         for href in a:
             print(response.urljoin(href))
             yield scrapy.Request(
                 url=response.urljoin(href),
                 callback=self.parse_goods_detail,
-                meta={
-                    'type': type,
-                }
             )
             # 翻页
             page_le = LinkExtractor(restrict_xpaths=("//ul[@class='pagination']/li/a",))
@@ -62,18 +55,15 @@ class AsapSpider(RedisSpider):
                 yield scrapy.Request(
                     url=response.urljoin(page.url),
                     callback=self.parse_good_url,
-                    meta={
-                        'type': type,
-                    }
                 )
 
     def parse_goods_detail(self, response):
         title = response.xpath("//div[@class='breadcrumbs']/h4/text()").extract_first()
-        type = response.meta.get('type')
-        if response.xpath(
-                "(//table[@class='table table-vertical table-noborder table-compact table-no-margin'])[2]/tbody/tr[5]/td/a[2]/text()").extract_first():
-            type = response.xpath(
-                "(//table[@class='table table-vertical table-noborder table-compact table-no-margin'])[2]/tbody/tr[5]/td/a[2]/text()").extract_first()
+        type1 = response.xpath("(//table[@class='table table-vertical table-noborder table-compact table-no-margin'])[2]/tbody/tr[5]/td/a[1]/text()").extract_first()
+        type2 = response.xpath("(//table[@class='table table-vertical table-noborder table-compact table-no-margin'])[2]/tbody/tr[5]/td/a[2]/text()").extract_first()
+        type=[]
+        type.append(type1)
+        type.append(type2)
         content = response.xpath("//div[@class='white-space-formatted'][1]/text()").extract_first()
         publish = None
         fetch_time = datetime.datetime.now()

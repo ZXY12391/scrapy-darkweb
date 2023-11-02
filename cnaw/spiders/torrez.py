@@ -10,8 +10,7 @@ from scrapy.linkextractors import LinkExtractor
 class TorrezSpider(RedisSpider):
     name = "torrez"
     redis_key = "search_url"
-    good_num1 = {}
-    good_num2 = {}
+
 
     def __init__(self, *args, **kwargs):
         super(TorrezSpider, self).__init__(*args, **kwargs)
@@ -28,42 +27,31 @@ class TorrezSpider(RedisSpider):
         for li in ul:
             href = li.xpath("./a/@href").extract_first()
             product_type = li.xpath("./a/text()").extract_first().strip()
-
             if product_type not in ['Drugs and Chemicals', 'Tutorials and e-books', 'Counterfeit']:
-                # 初始化页码计数值和两个商品计数值为0
-                self.page_count[product_type] = 0
-                self.good_num1[product_type] = 0
-                self.good_num2[product_type] = 0
                 yield scrapy.Request(
                     url=response.urljoin(href),
                     callback=self.parse_goods_url,
-                    meta={
-                        'type': product_type,
-                    }
                 )
 
     def parse_goods_url(self, response):
-        product_type = response.meta.get('type')
-        # 增加页码计数值
-        self.page_count[product_type] += 1
-        current_page = self.page_count[product_type]
-        print(f"Scraping {product_type}, Page {current_page}: {response.url}")
+
 
         # 解析商品URL和翻页逻辑
 
         trs = response.xpath("//table[@class='table table-custom table-listings']/tbody/tr")
         for tr in trs:
             href = tr.xpath("./td[2]/a/@href").extract_first()
-            # 增加已抓取商品计数值
-            self.good_num1[product_type] += 1
-            current_good_num1 = self.good_num1[product_type]
-            print(f"{product_type}: 第{current_good_num1}个准备抓取商品：{response.urljoin(href)}")
+            type1=tr.xpath("./td[2]/div/a[2]/text()").extract_first()
+            type2=tr.xpath("./td[2]/div/a[3]/text()").extract_first()
+            type=[]
+            type.append(type1)
+            type.append(type2)
             # 具体的商品URL解析逻辑
             yield scrapy.Request(
                 url=response.urljoin(href),
                 callback=self.parse_goods_detail,
                 meta={
-                    'type': product_type,
+                    'type': type,
                 }
             )
 
@@ -74,9 +62,6 @@ class TorrezSpider(RedisSpider):
             yield scrapy.Request(
                 url=page.url,
                 callback=self.parse_goods_url,
-                meta={
-                    'type': product_type,
-                }
             )
 
     def parse_goods_detail(self, response):
@@ -96,8 +81,5 @@ class TorrezSpider(RedisSpider):
         item['Publish_time'] = publish_time
         item['Fetch_time'] = datetime.datetime.now()
         item['Url'] = url
-        # 增加未抓取商品计数值
-        self.good_num2[product_type] += 1
-        current_good_num2 = self.good_num2[product_type]
-        print(f"{product_type}: 第{current_good_num2}个实际抓取商品：{url}")
+
         yield item
