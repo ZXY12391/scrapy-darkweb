@@ -20,7 +20,7 @@ class AsapSpider(RedisSpider):
         redis_conn = redis.StrictRedis(host=redis_host, password=redis_password, port=redis_port, db=redis_db)
         redis_conn.lpush('search_url', url)
     def parse(self, response):
-        #print(response.text)
+        print(response.text)
         lis=response.xpath("(//ul[@class='nav-list'])[2]/li")
         for li in lis:
             if li.xpath("./section"):
@@ -29,31 +29,23 @@ class AsapSpider(RedisSpider):
             else:
                 #href=li.xpath("./a/@href").extract_first()
                 type=li.xpath("./a/text()").extract_first().strip()
-            print(type)
             if type in ['Fraud','Digital goods']:
                 #print(f"{type}:{href}")
                 hrefs=li.xpath("./section/ul/li/a/@href").extract()
                 for href in hrefs:
                     print(href)
-                    yield scrapy.Request(
+                    """yield scrapy.Request(
                         url=response.urljoin(href),
                         callback=self.parse_good_url,
-                        meta={
-                            'type': type,
-                        }
-                    )
+                    )"""
 
-    def parse_good_url(self, response):
-        type=response.meta.get('type')
-        a=response.xpath("//div[@class='clr-col-lg-4 clr-col-md-6 card-search-listing']//span[@class='card-media-title']/a/@href").extract()
+    """def parse_good_url(self,response):
+        a = response.xpath("/html/body/div/div[2]/div/div[3]/div/form/div/div[1]/div[1]/div/span[1]/a/@href").extract()
         for href in a:
             print(response.urljoin(href))
             yield scrapy.Request(
                 url=response.urljoin(href),
                 callback=self.parse_goods_detail,
-                meta={
-                    'type': type,
-                }
             )
             # 翻页
             page_le = LinkExtractor(restrict_xpaths=("//ul[@class='pagination']/li/a",))
@@ -62,25 +54,18 @@ class AsapSpider(RedisSpider):
                 yield scrapy.Request(
                     url=response.urljoin(page.url),
                     callback=self.parse_good_url,
-                    meta={
-                        'type': type,
-                    }
                 )
-
-    def parse_goods_detail(self, response):
+    def parse_goods_detail(self,response):
         title = response.xpath("//div[@class='breadcrumbs']/h4/text()").extract_first()
-        type = response.meta.get('type')
-        if response.xpath(
-                "(//table[@class='table table-vertical table-noborder table-compact table-no-margin'])[2]/tbody/tr[5]/td/a[2]/text()").extract_first():
-            type = response.xpath(
-                "(//table[@class='table table-vertical table-noborder table-compact table-no-margin'])[2]/tbody/tr[5]/td/a[2]/text()").extract_first()
+        type = 'Fraud'
+        if response.xpath("/html/body/div/div[2]/div/div[2]/table/tbody/tr/td/table/tbody/tr[5]/td/a[2]/text()").extract_first():
+            type = response.xpath("/html/body/div/div[2]/div/div[2]/table/tbody/tr/td/table/tbody/tr[5]/td/a[2]/text()").extract_first()
         content = response.xpath("//div[@class='white-space-formatted'][1]/text()").extract_first()
         publish = None
         fetch_time = datetime.datetime.now()
         source = 'Asap'
         url = response.url
-        price = response.xpath(
-            "(//table[@class='table table-vertical table-noborder table-compact table-no-margin'])[2]/tbody/tr[1]/td/text()").extract_first()
+        price = response.xpath("/html/body/div/div[2]/div/div[2]/table/tbody/tr/td/table/tbody/tr[1]/td/text()").extract_first()
         item = CnawItem()
         item['Source'] = source
         item['Type'] = type
@@ -90,4 +75,4 @@ class AsapSpider(RedisSpider):
         item['Publish_time'] = publish
         item['Fetch_time'] = fetch_time
         item['Url'] = url
-        yield item
+        yield item"""

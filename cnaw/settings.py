@@ -53,17 +53,16 @@ CONCURRENT_REQUESTS_PER_IP = 16
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    "cnaw.middlewares.Login1Middleware": 298,
-    "cnaw.middlewares.Login2Middleware": 542,
+    "cnaw.middlewares.LoginAsapMiddleware": 298,
+    "cnaw.middlewares.LoginCabycMiddleware": 542,
     "cnaw.middlewares.ProxyMiddleware":250,
     "cnaw.middlewares.UAMiddleware":299,
-    "cnaw.middlewares.Login3Middleware":297,
-    "cnaw.middlewares.Login4Middleware": 250,
-    "cnaw.middlewares.Login6Middleware": 251,
-    "cnaw.middlewares.Login7Middleware": 252,
-    "cnaw.middlewares.Login8Middleware": 253,
-    "cnaw.middlewares.Login9Middleware": 254,
-
+    "cnaw.middlewares.LoginFreeforumMiddleware":297,
+    "cnaw.middlewares.LoginKingdomMiddleware": 250,
+    "cnaw.middlewares.LoginNemesisMiddleware": 251,
+    "cnaw.middlewares.LoginTorrezMiddleware": 252,
+    "cnaw.middlewares.LoginZwawwMiddleware": 253,
+    "cnaw.middlewares.LoginMGMGrandMiddleware": 253,
 }
 #LOG_LEVEL="WARNING"
 
@@ -109,7 +108,7 @@ FEED_EXPORT_ENCODING = "utf-8"
 MongoDB={
     "host":"localhost",
     "port":27017,
-    "collection":'KINGDOM'
+    "collection":'Asap'
 }
 #暗网中文网用户名和登录名
 Info1={ "userName1":1896236,

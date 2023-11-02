@@ -22,61 +22,102 @@ from cnaw.settings import REDIS_DB,REDIS_HOST,REDIS_PORT,REDIS_PARAMS
 class ProxyMiddleware:
     def process_request(self, request, spider):
             request.meta['proxy'] = "http://127.0.0.1:8118"  # 设置为暗网代理
-class Login2Middleware:
+class LoginCabycMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
     def __init__(self):
         #登陆后获得的
 
-        self.Authorization="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE2OTg0ODg1MzYsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.okcek9cuOI37HguVdToGmSTrNMVYTS4PI0ZvSIO2j6k"
+        self.Authorization="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE2OTg1ODEwMzEsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.VFauyRaEJUbLSg3Yhad6yvOR7d5LKqcjzulmnlO8cYw"
     def process_request(self, request, spider):
         if spider.name == 'cabyc':
             request.headers['Authorization'] = self.Authorization
-class Login1Middleware:
+
+
+class LoginTorrezMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
-        def __init__(self):
-            # 登陆后获得的 Cookie 字符串
-            cookie_string = "PHPSESSID=nc9k4omocc3ogbjtqe05g0q8r6; uuid=1896236"
-            #print("zzzzz")
+    def __init__(self):
+        self.cookie = {}  # 初始化cookie为空字典
 
-            # 将 Cookie 字符串分割成键值对
-            cookie_pairs = cookie_string.split('; ')
-            #print(cookie_pairs)
-            # 创建一个字典来存储 Cookie 键值对
-            self.cookie = {}
-            for pair in cookie_pairs:
-                key, value = pair.strip().split('=')
-                self.cookie[key] = value
-           #print(self.cookie)
+    @classmethod
+    def from_crawler(cls, crawler):
+        # This method is used by Scrapy to create your spiders.
 
-        def process_request(self, request, spider):
-            if spider.name == 'zwaw':
+        s = cls()
+        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
+        return s
+
+    def process_request(self, request, spider):
+        if spider.name == 'torrez':
+            if not request.cookies:  # 简单判断是否有cookie，没有的话就设置一下
                 request.cookies = self.cookie
-            #print(request.cookies)
+                #print(request.cookies)
+            return None
 
-class Login4Middleware:
-    # Not all methods need to be defined. If a method is not defined,
-    # scrapy acts as if the downloader middleware does not modify the
-    # passed objects.
-        def __init__(self):
-            # 登陆后获得的 Cookie 字符串
-                cookie_string = "PHPSESSID=0riq2kbugjo3c7scd65ocnrs2i; pc_333f7gpuishjximodvynnoisxujicgwaetzywgkxoxuje5ph3qyqjuid_onion__XSRF-TOKEN=eyJpdiI6IkFlUmV0NUdieHRNbWV0cEhwb0VZd0E9PSIsInZhbHVlIjoidW5VZzV4cnhFU2xJYVwvVXZwYmZIc3Q1RWZORTNqZWJncDZQTUpPZkgzc1F2aExqU1laVmdaWVJhYllyMnJtMzZlZUlrYmVOY3g2NFR3MG54ZzJ6eTZlaUlOXC91cCtENkoyXC9nZ0FTd1B1VURCNDkzaFY5Q3BFZkVuRHZFSnFlY0giLCJtYWMiOiJlOWRhM2FjNTRkYjNkYTA1YjIxYzdmMzRkNGNmOGE1ZWY4OTFjMTNhYjkxN2JkYzk2YWVmY2ZmOGM5ZjQ3NWZlIn0%3D; pc_333f7gpuishjximodvynnoisxujicgwaetzywgkxoxuje5ph3qyqjuid_onion__hr4ujvby8ds459og4kzcpbzwjdj_session=eyJpdiI6InlhazVNQzdVRmlRTFwvTnoyN1wvNEIxQT09IiwidmFsdWUiOiJSaU12Z1J0b2xSTjlNaittY0pSMEY2N1pEN1g1eXdKb1NQeU9DalRpaUY2cW43a0owQ1c2XC9SRm5HT3BCU1VLOStuOVhwRkNrOHltY3NoRkxZaWdBdE81b0lzbFM2K0xVeTBCcjlCYzR5WFYzblBTeGgxa1VzejdYandQWHZMWHYiLCJtYWMiOiJiNTBmNzNmZjMyMDJiZjA3NDYwYTA3NzkzZjNiMzQxMGY2MzRiNmFkOWM4NmE1NzE2ZDQ1ZjVkYWNiZjg0Yzk4In0%3D"
-                # 将 Cookie 字符串分割成键值对
-                cookie_pairs = cookie_string.split('; ')
-                #print(cookie_pairs)
-                # 创建一个字典来存储 Cookie 键值对
-                self.cookie = {}
-                for pair in cookie_pairs:
-                    key, value = pair.strip().split('=')
-                    self.cookie[key] = value
-                #print(self.cookie)
-        def process_request(self, request, spider):
-            if spider.name == 'torrez':
-                request.cookies = self.cookie
-                print(request.cookies)
+    def spider_opened(self, spider):
+        # 配置代理
+        if spider.name == 'torrez':
+            proxy = "http://127.0.0.1:8118"
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument(f'--proxy-server={proxy}')
+            # 启动Chrome浏览器
+            web = webdriver.Chrome(options=chrome_options)
+            web.get(
+                "http://mmd32xdcmzrdlpoapkpf43dxig5iufbpkkl76qnijgzadythu55fvkqd.onion")
+
+            wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
+            # 使用显式等待等待元素可见
+
+            element = wait.until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, "//img")))
+            img_element = web.find_element(by="xpath", value="//img")
+            # 截取SVG元素并保存为图片
+            img_element.screenshot("captchatorrez1.png")
+            # 等待用户输入验证码
+            # 等待用户输入验证码
+            captcha_input_hour = input("请输入小时: ")
+            captcha_input_minute = input("请输入分钟: ")
+            # 选择小时
+            hour_select = web.find_element(By.XPATH, "//select[@name='h']")
+            hour_select.click()
+            hour_option = hour_select.find_element(By.XPATH, f"//option[@value='{captcha_input_hour}']")
+            hour_option.click()
+            # 选择分钟
+            minute_select = web.find_element(By.XPATH, "//select[@name='m']")
+            minute_select.click()
+            minute_option = minute_select.find_element(By.XPATH, f"//option[@value='{captcha_input_minute}']")
+            minute_option.click()
+            web.find_element(by="xpath", value="//button").click()
+            element = wait.until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, "//*[@id='username']")))
+            userName1 = "wenyan"
+            passwd1 = "torrezpass"
+
+            web.find_element(by="xpath",
+                             value="//*[@id='username']").send_keys(
+                userName1)
+            web.find_element(by="xpath",
+
+                             value="//*[@id='password']").send_keys(
+                passwd1)
+            img_element = web.find_element(by="xpath", value="//img")
+            # 截取SVG元素并保存为图片
+            img_element.screenshot("captchatorrez2.png")
+            # 等待用户输入验证码
+            captcha_input = input("请输入验证码: ")
+            web.find_element(by="xpath",
+                             value="//*[@id='inputCaptcha']").send_keys(captcha_input)
+            web.find_element(By.XPATH, "//button[@type='submit']").click()
+            self.cookie = {item['name']: item['value'] for item in web.get_cookies()}
+            print(web.get_cookies())
+            # 获取登录后的URL
+            print(self.cookie)
+
 class UAMiddleware:
 
     def process_request(self, request, spider):
@@ -87,7 +128,7 @@ class UAMiddleware:
         return None
 
     # Add more proxy servers as needed
-class Login3Middleware:
+class LoginZwawwMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
@@ -172,7 +213,7 @@ class Login3Middleware:
             redis_conn = redis.StrictRedis(host=redis_host, password=redis_password, port=redis_port, db=redis_db)
             redis_conn.lpush('search_url', web.current_url)
 
-class Login6Middleware:
+class LoginFreeforumMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
@@ -230,7 +271,7 @@ class Login6Middleware:
             print(web.get_cookies())
             # 获取登录后的URL
             print(self.cookie)
-class Login7Middleware:
+class LoginNemesisMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
@@ -274,13 +315,87 @@ class Login7Middleware:
             # 获取登录后的URL
             print(self.cookie)
 
-class Login8Middleware:
+class LoginAsapMiddleware:
+    # Not all methods need to be defined. If a method is not defined,
+    # scrapy acts as if the downloader middleware does not modify the
+    # passed objects.
+    def __init__(self):
+        self.cookie = {}  # 初始化cookie为空字典
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        # This method is used by Scrapy to create your spiders.
+
+        s = cls()
+        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
+        return s
+
+    def process_request(self, request, spider):
+        if spider.name == 'asap':
+            if not request.cookies:  # 简单判断是否有cookie，没有的话就设置一下
+                request.cookies = self.cookie
+                #print(request.cookies)
+            return None
+
+    def spider_opened(self, spider):
+        # 配置代理
+        if spider.name == 'asap':
+            proxy = "http://127.0.0.1:8118"
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument(f'--proxy-server={proxy}')
+            # 启动Chrome浏览器
+            web = webdriver.Chrome(options=chrome_options)
+            web.get(
+                "http://asap4g7boedkl3fxbnf2unnnr6kpxnwoewzw4vakaxiuzfdo5xpmy6ad.onion/auth/login")
+
+            wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
+            # 使用显式等待等待元素可见
+
+            element = wait.until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, "//div[@class='image']")))
+            # 刷新页面
+            web.refresh()
+            element = wait.until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, "//*[@id='Username']")))
+            self.cookie = {item['name']: item['value'] for item in web.get_cookies()}
+            print(web.get_cookies())
+            # 获取登录后的URL
+            print(self.cookie)
+            userName1 = "wenyan"
+            passwd1 = "asappass"
+            web.find_element(by="xpath",
+                             value="//*[@id='Username']").send_keys(
+                userName1)
+            web.find_element(by="xpath",
+
+                             value="//*[@id='Password']").send_keys(
+                passwd1)
+            img_element = web.find_element(by="xpath", value="//img[@class='card-media-image']")
+            # 截取SVG元素并保存为图片
+            img_element.screenshot("captchaAsap.png")
+            # 等待用户输入验证码
+            captcha_input = input("请输入验证码: ")
+            web.find_element(by="xpath",
+                             value="//*[@id='Captcha']").send_keys(captcha_input)
+            web.find_element(by="xpath", value="//button").click()
+            web.refresh()
+            element = wait.until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, "/html/body/div/div[2]/nav/section/section[2]/label")))
+            self.cookie = {item['name']: item['value'] for item in web.get_cookies()}
+            print(web.get_cookies())
+            # 获取登录后的URL
+            print(self.cookie)
+            #web.save_screenshot("screenshot.png")
+"""class LoginAsapMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
         def __init__(self):
             # 登陆后获得的 Cookie 字符串
-            cookie_string = "PHPSESSID=9cm9vi2o2lnhl22no9hv1fahso"
+            cookie_string = "PHPSESSID=h72b6kku2vj5i7dc2h949avvpm"
             # 将 Cookie 字符串分割成键值对
             cookie_pairs = cookie_string.split('; ')
             #print(cookie_pairs)
@@ -289,18 +404,17 @@ class Login8Middleware:
             for pair in cookie_pairs:
                 key, value = pair.strip().split('=')
                 self.cookie[key] = value
-            #print(self.cookie)
+            print(self.cookie)
         def process_request(self, request, spider):
             if spider.name == 'asap':
-                request.cookies = self.cookie
-                print(request.cookies)
-class Login9Middleware:
+                request.cookies = self.cookie"""
+class LoginKingdomMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
         def __init__(self):
             # 登陆后获得的 Cookie 字符串
-            cookie_string = "PHPSESSID=45logbg3ahponp530dhaf88umo"
+            cookie_string = "PHPSESSID=t8ifmv94tcin995lpv6vos52vg"
             # 将 Cookie 字符串分割成键值对
             cookie_pairs = cookie_string.split('; ')
             #print(cookie_pairs)
@@ -313,3 +427,65 @@ class Login9Middleware:
         def process_request(self, request, spider):
             if spider.name == 'kingdom':
                 request.cookies = self.cookie
+
+class LoginMGMGrandMiddleware:
+    # Not all methods need to be defined. If a method is not defined,
+    # scrapy acts as if the downloader middleware does not modify the
+    # passed objects.
+    def __init__(self):
+        self.cookie = {}  # 初始化cookie为空字典
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        # This method is used by Scrapy to create your spiders.
+
+        s = cls()
+        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
+        return s
+
+    def process_request(self, request, spider):
+        if spider.name == 'MGMGrand':
+            if not request.cookies:  # 简单判断是否有cookie，没有的话就设置一下
+                request.cookies = self.cookie
+                #print(request.cookies)
+            return None
+
+    def spider_opened(self, spider):
+        # 配置代理
+        if spider.name == 'MGMGrand':
+            proxy = "http://127.0.0.1:8118"
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument(f'--proxy-server={proxy}')
+            # 启动Chrome浏览器
+            web = webdriver.Chrome(options=chrome_options)
+            web.get(
+                "http://duysanjqxo4svh35yqkxxe5r54z2xc5tjf6r3ichxd3m2rwcgabf44ad.onion/signin")
+
+            wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
+            # 使用显式等待等待元素可见
+
+            element = wait.until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, "//*[@id='username']")))
+            userName1 = "wenyanMGM"
+            passwd1 = "mgmpassword"
+            web.find_element(by="xpath",
+                             value="//*[@id='username']").send_keys(
+                userName1)
+            web.find_element(by="xpath",
+
+                             value="//*[@id='password']").send_keys(
+                passwd1)
+            img_element = web.find_element(by="xpath", value="//img[@class='img-recaptcha']")
+            # 截取SVG元素并保存为图片
+            img_element.screenshot("captchaMGM.png")
+            # 等待用户输入验证码
+            captcha_input = input("请输入验证码: ")
+            web.find_element(by="xpath",
+                             value="//*[@id='recaptcha']").send_keys(captcha_input)
+            web.find_element(by="xpath", value="//button").click()
+
+            self.cookie = {item['name']: item['value'] for item in web.get_cookies()}
+            print(web.get_cookies())
+            # 获取登录后的URL
+            print(self.cookie)
