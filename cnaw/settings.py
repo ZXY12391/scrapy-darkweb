@@ -108,7 +108,7 @@ FEED_EXPORT_ENCODING = "utf-8"
 MongoDB={
     "host":"localhost",
     "port":27017,
-    "collection":'Nemesis'
+    "collection":'MgmGrand'
 }
 #暗网中文网用户名和登录名
 Info1={ "userName1":1896236,
