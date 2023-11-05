@@ -3,22 +3,17 @@ import datetime
 from cnaw.items import CnawItem
 from scrapy.linkextractors import LinkExtractor
 from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
-from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT
+from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT,get_redis_connection
 import redis
 class MgmgrandSpider(RedisSpider):
     name = "MGMGrand"
     #start_urls = ["http://duysanjqxo4svh35yqkxxe5r54z2xc5tjf6r3ichxd3m2rwcgabf44ad.onion/#subscribe-modal"]
-    redis_key = "search_url"
+    redis_key = "search_MgmGrand"
     def __init__(self, *args, **kwargs):
         super( MgmgrandSpider, self).__init__(*args, **kwargs)
         url = 'http://duysanjqxo4svh35yqkxxe5r54z2xc5tjf6r3ichxd3m2rwcgabf44ad.onion/#subscribe-modal'
-        # 请替换为您自己的Redis连接信息
-        redis_host = REDIS_HOST
-        redis_port = REDIS_PORT
-        redis_db = REDIS_DB
-        redis_password = REDIS_PARAMS.get('password')
-        redis_conn = redis.StrictRedis(host=redis_host, password=redis_password, port=redis_port, db=redis_db)
-        redis_conn.lpush('search_url', url)
+        redis_conn = get_redis_connection()
+        redis_conn.lpush('search_MgmGrand', url)
 
     def parse(self, response):
         #print(response.text)

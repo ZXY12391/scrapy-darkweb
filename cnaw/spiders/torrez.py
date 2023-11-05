@@ -2,25 +2,21 @@ import scrapy
 import re
 import datetime
 from cnaw.items import CnawItem
-from cnaw.settings import REDIS_DB, REDIS_HOST, REDIS_PORT
+from cnaw.settings import REDIS_DB, REDIS_HOST, REDIS_PORT,REDIS_PARAMS,get_redis_connection
 import redis
 from scrapy_redis.spiders import RedisSpider
 from scrapy.linkextractors import LinkExtractor
 
 class TorrezSpider(RedisSpider):
     name = "torrez"
-    redis_key = "search_url"
-
+    redis_key = "search_torrez"
 
     def __init__(self, *args, **kwargs):
         super(TorrezSpider, self).__init__(*args, **kwargs)
         self.page_count = {}  # 创建一个字典用于存储每种商品类型的页码计数
         url = 'http://mmd32xdcmzrdlpoapkpf43dxig5iufbpkkl76qnijgzadythu55fvkqd.onion/home'
-        redis_host = REDIS_HOST
-        redis_port = REDIS_PORT
-        redis_db = REDIS_DB
-        redis_conn = redis.StrictRedis(host=redis_host, port=redis_port, db=redis_db)
-        redis_conn.lpush('search_url', url)
+        redis_conn = get_redis_connection()
+        redis_conn.lpush('search_torrez', url)
 
     def parse(self, response):
         ul = response.xpath("//ul[@class='sidebar'][1]/li")

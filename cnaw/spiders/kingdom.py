@@ -3,7 +3,7 @@ import re
 import datetime
 from cnaw.items import CnawItem
 from scrapy.linkextractors import LinkExtractor
-from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT
+from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT,get_redis_connection
 from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
 import redis
 import os
@@ -11,18 +11,13 @@ class KingdomSpider(RedisSpider):
     name = "kingdom"
     num=0
     #start_urls = ["https://kingdom4it4wzkkud2p2esvashyynvmsrbyuk4qh2bnyvcnoafyvoiyd.onion.is/?t=31832a84d397c3c1"]
-    redis_key = "search_url"
+    redis_key = "search_kingdom"
 
     def __init__(self, *args, **kwargs):
         super(KingdomSpider, self).__init__(*args, **kwargs)
         url = 'https://kingdom4it4wzkkud2p2esvashyynvmsrbyuk4qh2bnyvcnoafyvoiyd.onion.is/?t=31832a84d397c3c1'
-        # 请替换为您自己的Redis连接信息
-        redis_host = REDIS_HOST
-        redis_port = REDIS_PORT
-        redis_db = REDIS_DB
-        redis_password = REDIS_PARAMS.get('password')
-        redis_conn = redis.StrictRedis(host=redis_host, password=redis_password, port=redis_port, db=redis_db)
-        redis_conn.lpush('search_url', url)
+        redis_conn = get_redis_connection()
+        redis_conn.lpush('search_kingdom', url)
 
     def parse(self, response):
        # print(response.text)

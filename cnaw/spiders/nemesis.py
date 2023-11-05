@@ -3,21 +3,17 @@ from cnaw.items import CnawItem
 import datetime
 from scrapy.linkextractors import LinkExtractor
 from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
-from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT
+from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT,get_redis_connection
 import redis
 class NemesisSpider(RedisSpider):
     name = "nemesis"
-    redis_key = "search_url"
+    redis_key = "search_nemesis"
     def __init__(self, *args, **kwargs):
         super(NemesisSpider, self).__init__(*args, **kwargs)
         url = 'http://wvp2anhcslscv7tg3kpbdf2oklhaelhla72l3nkzndubqrjldrjai3id.onion'
         # 请替换为您自己的Redis连接信息
-        redis_host = REDIS_HOST
-        redis_port = REDIS_PORT
-        redis_db = REDIS_DB
-        redis_password = REDIS_PARAMS.get('password')
-        redis_conn = redis.StrictRedis(host=redis_host, password=redis_password, port=redis_port, db=redis_db)
-        redis_conn.lpush('search_url', url)
+        redis_conn = get_redis_connection()
+        redis_conn.lpush('search_nemesis', url)
 
     def parse(self, response):
         #print(response.text)
