@@ -9,9 +9,9 @@ from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
 from cnaw.settings import REDIS_DB,REDIS_HOST,REDIS_PORT,REDIS_PARAMS
 class ZwawwSpider(RedisSpider):
     name = "zwaww"
-    redis_key = 'search_url'
+    redis_key = 'search_zwaww'
     def parse(self, response):
-        #print(response.text)
+        print(response.text)
         print(response.url)
         divs = response.xpath("//div[@class='div_index_both'][2]/div")
         for div in divs:

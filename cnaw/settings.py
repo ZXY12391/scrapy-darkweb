@@ -20,7 +20,7 @@ NEWSPIDER_MODULE = "cnaw.spiders"
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 64
 
 
 # Configure a delay for requests for the same website (default: 0)
@@ -28,8 +28,8 @@ CONCURRENT_REQUESTS = 32
 # See also autothrottle settings and docs
 DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
-CONCURRENT_REQUESTS_PER_DOMAIN = 16
-CONCURRENT_REQUESTS_PER_IP = 16
+CONCURRENT_REQUESTS_PER_DOMAIN = 32
+CONCURRENT_REQUESTS_PER_IP = 32
 #LOG_LEVEL="ERROR"
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
@@ -106,9 +106,9 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 MongoDB={
-    "host":"localhost",
+    "host":"10.133.29.226",
     "port":27017,
-    "collection":'MgmGrand'
+    "collection":'Kingdom'
 }
 #暗网中文网用户名和登录名
 Info1={ "userName1":1896236,
@@ -116,7 +116,7 @@ Info1={ "userName1":1896236,
 }
 import redis
 # Redis相关配置
-REDIS_HOST = "127.0.0.1"
+REDIS_HOST = "223.129.87.17"
 REDIS_PORT = 6379
 REDIS_DB = 4
 REDIS_PARAMS = {

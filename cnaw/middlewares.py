@@ -22,7 +22,7 @@ class LoginCabycMiddleware:
     def __init__(self):
         #登陆后获得的
 
-        self.Authorization="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE2OTg1ODEwMzEsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.VFauyRaEJUbLSg3Yhad6yvOR7d5LKqcjzulmnlO8cYw"
+        self.Authorization="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE2OTkyNjg3MDIsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.HJd_DOCfBliysjwFbELyaJP5O02mYMErr8NoExzh2i4"
     def process_request(self, request, spider):
         if spider.name == 'cabyc':
             request.headers['Authorization'] = self.Authorization
@@ -204,7 +204,7 @@ class LoginZwawwMiddleware:
             redis_db = REDIS_DB
             redis_password = REDIS_PARAMS.get('password')
             redis_conn = redis.StrictRedis(host=redis_host, password=redis_password, port=redis_port, db=redis_db)
-            redis_conn.lpush('search_url', web.current_url)
+            redis_conn.lpush('search_zwaww', web.current_url)
 
 class LoginFreeforumMiddleware:
     # Not all methods need to be defined. If a method is not defined,
@@ -407,7 +407,7 @@ class LoginKingdomMiddleware:
     # passed objects.
         def __init__(self):
             # 登陆后获得的 Cookie 字符串
-            cookie_string = "PHPSESSID=t8ifmv94tcin995lpv6vos52vg"
+            cookie_string = "PHPSESSID=hnrl7ig0a3so7v6poai6ci65ss"
             # 将 Cookie 字符串分割成键值对
             cookie_pairs = cookie_string.split('; ')
             #print(cookie_pairs)

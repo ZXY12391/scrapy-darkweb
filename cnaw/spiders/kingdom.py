@@ -13,11 +13,6 @@ class KingdomSpider(RedisSpider):
     #start_urls = ["https://kingdom4it4wzkkud2p2esvashyynvmsrbyuk4qh2bnyvcnoafyvoiyd.onion.is/?t=31832a84d397c3c1"]
     redis_key = "search_kingdom"
 
-    def __init__(self, *args, **kwargs):
-        super(KingdomSpider, self).__init__(*args, **kwargs)
-        url = 'https://kingdom4it4wzkkud2p2esvashyynvmsrbyuk4qh2bnyvcnoafyvoiyd.onion.is/?t=31832a84d397c3c1'
-        redis_conn = get_redis_connection()
-        redis_conn.lpush('search_kingdom', url)
 
     def parse(self, response):
        # print(response.text)
