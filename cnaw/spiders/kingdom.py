@@ -15,15 +15,15 @@ class KingdomSpider(RedisSpider):
 
 
     def parse(self, response):
-       # print(response.text)
+        #print(response.text)
         uls=response.xpath("(//div[@class='sidebar'])[3]/ul")
         #print(uls)
         for ul in uls:
-            type=ul.xpath("./a/text()").extract_first().strip()
+            type = ul.xpath("./a[1]/text()").extract_first().strip()
             type = re.sub(r'\(\d+\)', '', type).strip()
-            #print(type)
+            print(type)
             if type not in ['Drugs', 'Jewellery & Art', 'Counterfeit']:
-                href = ul.xpath("./a/@href").extract_first()
+                href = ul.xpath("./a[1]/@href").extract_first()
                 #print(response.urljoin(href))
                 yield scrapy.Request(
                         url=response.urljoin(href),
@@ -31,39 +31,43 @@ class KingdomSpider(RedisSpider):
                         meta={
                             'type': type,
                         }
+
                     )
 
     def parse_good_url(self,response):
+        type1=response.meta.get('type')
         div2s=response.xpath("//div[@id='p0']/div/div")
         for div in div2s:
             href=div.xpath("./div[@class='col-md-7']/a[1]/@href").extract_first()
-            type1=response.meta.get('type')
             type2=div.xpath("./div[@class='col-md-7']/a[2]/text()").extract_first()
-            type=[]
-            type.append(type1)
-            type.append(type2)
             #print(f"{type}:{href}")
             yield scrapy.Request(
                 url=response.urljoin(href),
                 callback=self.parse_good_detail,
                 meta={
-                    'type': type,
+                    'type1': type1,
+                    'type2':type2
                 }
             )
+            #type.clear()
             # 翻页
-            page_le = LinkExtractor(restrict_xpaths=("//ul[@class='pagination']/li/a",))
-            page_links = page_le.extract_links(response)
-            for page in page_links:
-                yield scrapy.Request(
+        page_le = LinkExtractor(restrict_xpaths=("//ul[@class='pagination']/li/a",))
+        page_links = page_le.extract_links(response)
+        for page in page_links:
+            yield scrapy.Request(
                     url=response.urljoin(page.url),
                     callback=self.parse_good_url,
                     meta={
-                        'type': type,
+                        'type': type1,
                     }
-                )
+        )
 
     def parse_good_detail(self,response):
-        type = response.meta.get('type')
+        type1=response.meta.get('type1')
+        type2 = response.meta.get('type2')
+        type = []
+        type.append(type1)
+        type.append(type2)
         title_elements = response.xpath("/html/body/div/div/div[3]/div[2]/form/div[2]/div[1]/text()").extract()
         # 使用join()方法将文本元素合并为一个字符串
         title = ''.join(title_elements)
