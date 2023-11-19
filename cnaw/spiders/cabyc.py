@@ -2,13 +2,14 @@ import scrapy
 import datetime
 from cnaw.items import CnawItem
 from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
-from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT
+from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT,get_redis_connection
 import redis
 class CabycSpider(RedisSpider):
     name = 'cabyc'
     redis_key = "search_cabyc"
     goodDetailBase = "http://cabyceogpsji73sske5nvo45mdrkbz4m3qd3iommf3zaaa6izg3j2cqd.onion/api/goods/detail?gid="
     goodUrlBase="http://cabyceogpsji73sske5nvo45mdrkbz4m3qd3iommf3zaaa6izg3j2cqd.onion/#/detail?gid="
+
 
     def parse(self, response):
         # 使用 JSON 解析响应内容

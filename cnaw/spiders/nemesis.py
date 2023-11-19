@@ -3,7 +3,7 @@ from cnaw.items import CnawItem
 import datetime
 from scrapy.linkextractors import LinkExtractor
 from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
-from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT
+from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT,get_redis_connection
 import redis
 class NemesisSpider(RedisSpider):
     name = "nemesis"
@@ -50,7 +50,7 @@ class NemesisSpider(RedisSpider):
         price_one=None
         prices = []
         if response.xpath("//div[@class='text-gray-800 fs-1 fw-bolder mt-6']/text()").extract_first():
-            price_one=response.xpath("//div[@class='text-gray-800 fs-1 fw-bolder mt-6']/text()").extract_first().strip()
+            price_one=response.xpath("//div[@class='text-gray-800 fs-1 fw-bolder mt-6']/text()").extract_first()
         else:
             labels=response.xpath("//div[@class='mt-6']/label")
             for label in labels:

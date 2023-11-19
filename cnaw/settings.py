@@ -26,7 +26,7 @@ CONCURRENT_REQUESTS = 64
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 2
+DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 32
 CONCURRENT_REQUESTS_PER_IP = 32
@@ -108,6 +108,7 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 MongoDB={
+<<<<<<< HEAD
     "host":"127.0.0.1",
     "port":27017,
     #"collection":'test'
@@ -121,6 +122,11 @@ MongoDB={
         "MGMGrand"
 
     }
+=======
+    "host":"10.133.29.226",
+    "port":27017,
+    "collection":'Kingdom'
+>>>>>>> 75f52e34b3859925b044af1d9c59e3eaa650370a
 }
 #暗网中文网用户名和登录名
 Info1={ "userName1":1896236,
@@ -128,14 +134,22 @@ Info1={ "userName1":1896236,
 }
 import redis
 # Redis相关配置
+<<<<<<< HEAD
 #10.133.29.226
 #
 REDIS_HOST = "127.0.0.1"
+=======
+REDIS_HOST = "223.129.87.17"
+>>>>>>> 75f52e34b3859925b044af1d9c59e3eaa650370a
 REDIS_PORT = 6379
 REDIS_DB = 4
 REDIS_PARAMS = {
     "password": "wenyan",
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 75f52e34b3859925b044af1d9c59e3eaa650370a
 def get_redis_connection():
     # 初始化Redis连接
     redis_host = REDIS_HOST

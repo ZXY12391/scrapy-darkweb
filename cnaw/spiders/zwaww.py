@@ -12,7 +12,7 @@ class ZwawwSpider(RedisSpider):
     redis_key = 'search_zwaww'
 
     def parse(self, response):
-        #print(response.text)
+        print(response.text)
         print(response.url)
         divs = response.xpath("//div[@class='div_index_both'][2]/div")
         for div in divs:

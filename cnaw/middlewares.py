@@ -19,7 +19,11 @@ class LoginCabycMiddleware:
     def __init__(self):
         #登陆后获得的
 
+<<<<<<< HEAD
         self.Authorization="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE2OTkyNTcwNTcsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.PHVP4hPXulvCwCxW6pW-WrzlomDh3OLnq7fBL5kZYDw"
+=======
+        self.Authorization="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE2OTkyNjg3MDIsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.HJd_DOCfBliysjwFbELyaJP5O02mYMErr8NoExzh2i4"
+>>>>>>> 75f52e34b3859925b044af1d9c59e3eaa650370a
     def process_request(self, request, spider):
         if spider.name == 'cabyc':
             request.headers['Authorization'] = self.Authorization

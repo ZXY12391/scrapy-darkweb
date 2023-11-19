@@ -1,5 +1,12 @@
+#selenium不能用大概率是chrome driver 的版本问题
 1.cabyc是长安不夜城的爬虫，用的是登陆后获取的Authorization，但Authorization每天都在変，采用javascript动态加载，获取的页面无HTML信息，因此访问JSON数据的API：http://cabyceogpsji73sske5nvo45mdrkbz4m3qd3iommf3zaaa6izg3j2cqd.onion
+<<<<<<< HEAD
 #验证交易密码：Zheshianwang123*
+=======
+#验证交易密码：
+用户名：wenyan
+密码；1234Awxmhh*
+>>>>>>> 75f52e34b3859925b044af1d9c59e3eaa650370a
 2.zwaww是暗网中文交易市场的爬虫，该网站每次登陆，刷新，点击后的URL都不一样，所以翻页按照正常逻辑会出现无限循环问题，登陆采用selenium，不用担心cookie问题：http://mxxxxxxxs4uqwd6cylditj7rh7zaz2clh7ofgik2z5jpeq5ixn4ziayd.onion
 3.zwaw是暗网中文交易市场的爬虫，用的是获取到的cookie，但该网站的cookie每天都不一样，而且登陆页面的URL也经常更换。
 4.Darkfox主要是一家信用卡商店。市场上可能有最大范围的被盗信用卡，带有用于在线购买的 stvc 代码。darkfox上的所有卡都有额外的信息，例如dob，ssn。出售卡的供应商需要支付 500 美元或更多的押金，因此如果卡不起作用，您可以随时上诉。今天，在darkfox上，您可以找到来自世界各地的信用卡，包括美国和欧洲，价格从5美元到100美元不等。darkfox上最受欢迎的信用卡供应商是：cheapboost，trebol，UniCC。
@@ -33,7 +40,7 @@ http://6rdk3rjnecd4qaazmupavufxuge3j2ug667tgrn4r6mkkjz4srt456yd.onion/member?act
 10.KINGDOMPASS
 密码：kingdompass
 pin:123456
-username:kingdomwenyan
+username:wenyanhaha   
 phrase:ZXCV
 11.MGM GRAND
 用户：wenyanMGM
@@ -41,3 +48,5 @@ phrase:ZXCV
 pin:123456
 https://darkcatalog.com/mgm-grand-market/
 助记词：slightly trace further matter drove heaven wound cover sharp lung skip whatever clear joke touch
+
+

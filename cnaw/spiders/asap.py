@@ -3,12 +3,13 @@ import datetime
 from cnaw.items import CnawItem
 from scrapy.linkextractors import LinkExtractor
 from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
-from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT
+from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT,get_redis_connection
 import redis
 class AsapSpider(RedisSpider):
     name = "asap"
     # start_urls = ["http://asap4g7boedkl3fxbnf2unnnr6kpxnwoewzw4vakaxiuzfdo5xpmy6ad.onion/search?categoryId=6a99b55b-8258-4aa8-b75e-678fd4cda86d"]
     redis_key = "search_asap"
+
     def parse(self, response):
         #print(response.text)
         lis=response.xpath("(//ul[@class='nav-list'])[2]/li")
