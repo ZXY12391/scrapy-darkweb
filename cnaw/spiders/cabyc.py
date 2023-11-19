@@ -6,19 +6,9 @@ from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT
 import redis
 class CabycSpider(RedisSpider):
     name = 'cabyc'
-    redis_key = "search_url"
+    redis_key = "search_cabyc"
     goodDetailBase = "http://cabyceogpsji73sske5nvo45mdrkbz4m3qd3iommf3zaaa6izg3j2cqd.onion/api/goods/detail?gid="
     goodUrlBase="http://cabyceogpsji73sske5nvo45mdrkbz4m3qd3iommf3zaaa6izg3j2cqd.onion/#/detail?gid="
-    def __init__(self, *args, **kwargs):
-        super(CabycSpider, self).__init__(*args, **kwargs)
-        url = 'http://cabyceogpsji73sske5nvo45mdrkbz4m3qd3iommf3zaaa6izg3j2cqd.onion/api/category/goods?page_num=1&page_size=10&order=&order_by='
-        # 请替换为您自己的Redis连接信息
-        redis_host = REDIS_HOST
-        redis_port = REDIS_PORT
-        redis_db = REDIS_DB
-        redis_password=REDIS_PARAMS.get('password')
-        redis_conn = redis.StrictRedis(host=redis_host, password=redis_password, port=redis_port, db=redis_db)
-        redis_conn.lpush('search_url', url)
 
     def parse(self, response):
         # 使用 JSON 解析响应内容
@@ -61,7 +51,7 @@ class CabycSpider(RedisSpider):
             Title = data['name']  # 获取商品名称
             Price = data['price']  # 获取商品价格
             Content=data['intro']
-            Source="cabyc"
+            Source="Cabyc"
             Fetch_time = datetime.datetime.now()
             timestamp=data['ctime']
             Publish_time = datetime.datetime.fromtimestamp(timestamp)

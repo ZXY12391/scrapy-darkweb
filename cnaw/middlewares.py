@@ -1,7 +1,4 @@
-# Define here the models for your spider middleware
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -10,11 +7,11 @@ from selenium import webdriver
 from random import choice
 from cnaw.settings import USER_AGENT_LIST
 import redis
-
+from cnaw.settings import Proxy
 from cnaw.settings import REDIS_DB,REDIS_HOST,REDIS_PORT,REDIS_PARAMS
 class ProxyMiddleware:
     def process_request(self, request, spider):
-            request.meta['proxy'] = "http://127.0.0.1:8118"  # 设置为暗网代理
+            request.meta['proxy'] = Proxy  # 设置为暗网代理
 class LoginCabycMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
@@ -22,7 +19,7 @@ class LoginCabycMiddleware:
     def __init__(self):
         #登陆后获得的
 
-        self.Authorization="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE2OTg1ODEwMzEsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.VFauyRaEJUbLSg3Yhad6yvOR7d5LKqcjzulmnlO8cYw"
+        self.Authorization="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE2OTkyNTcwNTcsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.PHVP4hPXulvCwCxW6pW-WrzlomDh3OLnq7fBL5kZYDw"
     def process_request(self, request, spider):
         if spider.name == 'cabyc':
             request.headers['Authorization'] = self.Authorization
@@ -53,7 +50,7 @@ class LoginTorrezMiddleware:
     def spider_opened(self, spider):
         # 配置代理
         if spider.name == 'torrez':
-            proxy = "http://127.0.0.1:8118"
+            proxy = Proxy
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_argument(f'--proxy-server={proxy}')
             # 启动Chrome浏览器
@@ -146,7 +143,7 @@ class LoginZwawwMiddleware:
     def spider_opened(self, spider):
         # 配置代理
         if spider.name == 'zwaww':
-            proxy = "http://127.0.0.1:8118"
+            proxy = Proxy
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_argument(f'--proxy-server={proxy}')
             # 启动Chrome浏览器
@@ -204,7 +201,7 @@ class LoginZwawwMiddleware:
             redis_db = REDIS_DB
             redis_password = REDIS_PARAMS.get('password')
             redis_conn = redis.StrictRedis(host=redis_host, password=redis_password, port=redis_port, db=redis_db)
-            redis_conn.lpush('search_url', web.current_url)
+            redis_conn.lpush('search_zwaww', web.current_url)
 
 class LoginFreeforumMiddleware:
     # Not all methods need to be defined. If a method is not defined,
@@ -231,7 +228,7 @@ class LoginFreeforumMiddleware:
     def spider_opened(self, spider):
         # 配置代理
         if spider.name == 'freeforum':
-            proxy = "http://127.0.0.1:8118"
+            proxy = Proxy
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_argument(f'--proxy-server={proxy}')
             # 启动Chrome浏览器
@@ -289,7 +286,7 @@ class LoginNemesisMiddleware:
     def spider_opened(self, spider):
         # 配置代理
         if spider.name == 'nemesis':
-            proxy = "http://127.0.0.1:8118"
+            proxy = Proxy
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_argument(f'--proxy-server={proxy}')
             # 启动Chrome浏览器
@@ -333,7 +330,7 @@ class LoginAsapMiddleware:
     def spider_opened(self, spider):
         # 配置代理
         if spider.name == 'asap':
-            proxy = "http://127.0.0.1:8118"
+            proxy = Proxy
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_argument(f'--proxy-server={proxy}')
             # 启动Chrome浏览器
@@ -382,32 +379,14 @@ class LoginAsapMiddleware:
             # 获取登录后的URL
             print(self.cookie)
             #web.save_screenshot("screenshot.png")
-"""class LoginAsapMiddleware:
-    # Not all methods need to be defined. If a method is not defined,
-    # scrapy acts as if the downloader middleware does not modify the
-    # passed objects.
-        def __init__(self):
-            # 登陆后获得的 Cookie 字符串
-            cookie_string = "PHPSESSID=h72b6kku2vj5i7dc2h949avvpm"
-            # 将 Cookie 字符串分割成键值对
-            cookie_pairs = cookie_string.split('; ')
-            #print(cookie_pairs)
-            # 创建一个字典来存储 Cookie 键值对
-            self.cookie = {}
-            for pair in cookie_pairs:
-                key, value = pair.strip().split('=')
-                self.cookie[key] = value
-            print(self.cookie)
-        def process_request(self, request, spider):
-            if spider.name == 'asap':
-                request.cookies = self.cookie"""
+
 class LoginKingdomMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
         def __init__(self):
             # 登陆后获得的 Cookie 字符串
-            cookie_string = "PHPSESSID=t8ifmv94tcin995lpv6vos52vg"
+            cookie_string = "PHPSESSID=hnrl7ig0a3so7v6poai6ci65ss"
             # 将 Cookie 字符串分割成键值对
             cookie_pairs = cookie_string.split('; ')
             #print(cookie_pairs)
@@ -446,7 +425,7 @@ class LoginMGMGrandMiddleware:
     def spider_opened(self, spider):
         # 配置代理
         if spider.name == 'MGMGrand':
-            proxy = "http://127.0.0.1:8118"
+            proxy = Proxy
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_argument(f'--proxy-server={proxy}')
             # 启动Chrome浏览器
@@ -456,15 +435,16 @@ class LoginMGMGrandMiddleware:
 
             wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
             # 使用显式等待等待元素可见
+            with open("page.html", "w", encoding="utf-8") as file:
+                file.write(web.page_source)
+            element = wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@id='username']")))
 
-            element = wait.until(
-                EC.visibility_of_element_located(
-                    (By.XPATH, "//*[@id='username']")))
             userName1 = "wenyanMGM"
             passwd1 = "mgmpassword"
             web.find_element(by="xpath",
-                             value="//*[@id='username']").send_keys(
+                             value="//input[@id='username']").send_keys(
                 userName1)
+
             web.find_element(by="xpath",
 
                              value="//*[@id='password']").send_keys(
@@ -482,3 +462,23 @@ class LoginMGMGrandMiddleware:
             print(web.get_cookies())
             # 获取登录后的URL
             print(self.cookie)
+
+class LoginFreecityMiddleware:
+    # Not all methods need to be defined. If a method is not defined,
+    # scrapy acts as if the downloader middleware does not modify the
+    # passed objects.
+        def __init__(self):
+            # 登陆后获得的 Cookie 字符串
+            cookie_string = "freecity=s%3ADDkbG957JuBwhTGdAZ_o-zHKF5tYUzi3.Wz3yYCaDSMKG6qLMne72VQ%2FoRI%2FZhKi0R0qW61U%2F7ug"
+            # 将 Cookie 字符串分割成键值对
+            cookie_pairs = cookie_string.split('; ')
+            #print(cookie_pairs)
+            # 创建一个字典来存储 Cookie 键值对
+            self.cookie = {}
+            for pair in cookie_pairs:
+                key, value = pair.strip().split('=')
+                self.cookie[key] = value
+            print(self.cookie)
+        def process_request(self, request, spider):
+            if spider.name == 'freecity':
+                request.cookies = self.cookie

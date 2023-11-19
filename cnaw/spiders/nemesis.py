@@ -7,17 +7,8 @@ from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT
 import redis
 class NemesisSpider(RedisSpider):
     name = "nemesis"
-    redis_key = "search_url"
-    def __init__(self, *args, **kwargs):
-        super(NemesisSpider, self).__init__(*args, **kwargs)
-        url = 'http://wvp2anhcslscv7tg3kpbdf2oklhaelhla72l3nkzndubqrjldrjai3id.onion'
-        # 请替换为您自己的Redis连接信息
-        redis_host = REDIS_HOST
-        redis_port = REDIS_PORT
-        redis_db = REDIS_DB
-        redis_password = REDIS_PARAMS.get('password')
-        redis_conn = redis.StrictRedis(host=redis_host, password=redis_password, port=redis_port, db=redis_db)
-        redis_conn.lpush('search_url', url)
+    redis_key = "search_nemesis"
+
 
     def parse(self, response):
         #print(response.text)
@@ -25,7 +16,7 @@ class NemesisSpider(RedisSpider):
         for li in lis:
             type = li.xpath("./a/text()").extract_first().strip()
             print(type)
-            if type not in ['Drugs', 'Forgeries/Counterfeits','others']:
+            if type not in ['Drugs', 'Forgeries/Counterfeits']:
                 href=li.xpath("./a/@href").extract_first()
                 print(response.urljoin(href))
                 yield scrapy.Request(
@@ -51,7 +42,7 @@ class NemesisSpider(RedisSpider):
             )
 
     def parse_goods_detail(self,response):
-        title=response.xpath("//a[@class='fs-1 text-gray-800 fw-bolder me-3 mb-3']/text()").extract_first().strip()
+        title=response.xpath("//a[@class='fs-1 text-gray-800 fw-bolder me-3 mb-3']/text()").extract_first()
         text_content = response.xpath("//div[@class='fs-5 text-gray-800'][1]//text()").extract()
         content = ' '.join(text_content)
         publish=response.xpath("//div[@class='fs-7 text-gray-400']//text()").extract()
@@ -68,7 +59,7 @@ class NemesisSpider(RedisSpider):
                 price=price.strip()
                 prices.append(price)
         fetch_time = datetime.datetime.now()
-        source = 'nemesis'
+        source = 'Nemesis'
         url = response.url
         type1 = response.xpath("//div[@class='fs-7 py-1']/a[1]/text()").extract_first()
         type2 = response.xpath("//div[@class='fs-7 py-1']/a[2]/text()").extract_first()

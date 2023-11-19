@@ -20,7 +20,7 @@ NEWSPIDER_MODULE = "cnaw.spiders"
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 64
 
 
 # Configure a delay for requests for the same website (default: 0)
@@ -28,8 +28,8 @@ CONCURRENT_REQUESTS = 32
 # See also autothrottle settings and docs
 DOWNLOAD_DELAY = 2
 # The download delay setting will honor only one of:
-CONCURRENT_REQUESTS_PER_DOMAIN = 16
-CONCURRENT_REQUESTS_PER_IP = 16
+CONCURRENT_REQUESTS_PER_DOMAIN = 32
+CONCURRENT_REQUESTS_PER_IP = 32
 #LOG_LEVEL="ERROR"
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
@@ -49,7 +49,7 @@ CONCURRENT_REQUESTS_PER_IP = 16
     #"cnaw.middlewares.CnawSpiderMiddleware": 543,
     #"cnaw.middlewares.LoginMiddleware": 543
 #}
-
+Proxy='http://10.133.70.204:8118'
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
@@ -63,6 +63,8 @@ DOWNLOADER_MIDDLEWARES = {
     "cnaw.middlewares.LoginTorrezMiddleware": 252,
     "cnaw.middlewares.LoginZwawwMiddleware": 253,
     "cnaw.middlewares.LoginMGMGrandMiddleware": 253,
+    "cnaw.middlewares.LoginFreecityMiddleware": 254,
+
 }
 #LOG_LEVEL="WARNING"
 
@@ -106,23 +108,42 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 MongoDB={
-    "host":"localhost",
+    "host":"127.0.0.1",
     "port":27017,
-    "collection":'MgmGrand'
+    #"collection":'test'
+    "collection":{
+        "Asap",
+        "Zwaww",
+        "Cabyc",
+        "Torrez",
+        "Kingdom",
+        "Nemesis",
+        "MGMGrand"
+
+    }
 }
 #暗网中文网用户名和登录名
 Info1={ "userName1":1896236,
        " passwd1":"1234awxmhh"
 }
-#配置一些东西
-#redis相关配置
-REDIS_HOST="127.0.0.1"
-REDIS_PORT=6379
-REDIS_DB=4
-
-REDIS_PARAMS={
-    "password":"wenyan",
+import redis
+# Redis相关配置
+#10.133.29.226
+#
+REDIS_HOST = "127.0.0.1"
+REDIS_PORT = 6379
+REDIS_DB = 4
+REDIS_PARAMS = {
+    "password": "wenyan",
 }
+def get_redis_connection():
+    # 初始化Redis连接
+    redis_host = REDIS_HOST
+    redis_port = REDIS_PORT
+    redis_db = REDIS_DB
+    redis_password = REDIS_PARAMS.get('password')
+    return redis.StrictRedis(host=redis_host, password=redis_password, port=redis_port, db=redis_db)
+
 #scrapy-redis相关配置,配调度器，配过滤器，固定的
 # 使用scrapy-redis组件的去重队列（过滤）
 #DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
@@ -187,3 +208,11 @@ USER_AGENT_LIST = [
             "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.60 Safari/537.17",
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1309.0 Safari/537.17"
             ]
+# different spider setting
+Cabyc_TASK = 'cnaw:cabyc'
+Torrez_TASK = 'cnaw:torrez'
+Nemesis_TASK = 'cnaw:nemesis'
+Kingdom_TASK = 'cnaw:kingdom'
+Asap_TASK = 'cnaw:nemesis'
+Zwaww_TASK = 'cnaw:zwaww'
+MGMGrand_TASK = 'cnaw:MGMGrand'

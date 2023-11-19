@@ -8,7 +8,7 @@ import redis
 class MgmgrandSpider(RedisSpider):
     name = "MGMGrand"
     #start_urls = ["http://duysanjqxo4svh35yqkxxe5r54z2xc5tjf6r3ichxd3m2rwcgabf44ad.onion/#subscribe-modal"]
-    redis_key = "search_url"
+    redis_key = "search_MgmGrand"
     def __init__(self, *args, **kwargs):
         super( MgmgrandSpider, self).__init__(*args, **kwargs)
         url = 'http://duysanjqxo4svh35yqkxxe5r54z2xc5tjf6r3ichxd3m2rwcgabf44ad.onion/#subscribe-modal'

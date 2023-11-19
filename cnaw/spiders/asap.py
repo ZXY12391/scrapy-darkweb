@@ -8,17 +8,7 @@ import redis
 class AsapSpider(RedisSpider):
     name = "asap"
     # start_urls = ["http://asap4g7boedkl3fxbnf2unnnr6kpxnwoewzw4vakaxiuzfdo5xpmy6ad.onion/search?categoryId=6a99b55b-8258-4aa8-b75e-678fd4cda86d"]
-    redis_key = "search_url"
-    def __init__(self, *args, **kwargs):
-        super(AsapSpider, self).__init__(*args, **kwargs)
-        url = 'http://asap4g7boedkl3fxbnf2unnnr6kpxnwoewzw4vakaxiuzfdo5xpmy6ad.onion/'
-        # 请替换为您自己的Redis连接信息
-        redis_host = REDIS_HOST
-        redis_port = REDIS_PORT
-        redis_db = REDIS_DB
-        redis_password = REDIS_PARAMS.get('password')
-        redis_conn = redis.StrictRedis(host=redis_host, password=redis_password, port=redis_port, db=redis_db)
-        redis_conn.lpush('search_url', url)
+    redis_key = "search_asap"
     def parse(self, response):
         #print(response.text)
         lis=response.xpath("(//ul[@class='nav-list'])[2]/li")
@@ -43,7 +33,7 @@ class AsapSpider(RedisSpider):
     def parse_good_url(self, response):
         a=response.xpath("//div[@class='clr-col-lg-4 clr-col-md-6 card-search-listing']//span[@class='card-media-title']/a/@href").extract()
         for href in a:
-            print(response.urljoin(href))
+            #print(response.urljoin(href))
             yield scrapy.Request(
                 url=response.urljoin(href),
                 callback=self.parse_goods_detail,

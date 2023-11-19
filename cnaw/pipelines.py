@@ -18,16 +18,15 @@ class CnawPipeline:
     num=0
     def open_spider(self, spider):
         self.client = pymongo.MongoClient(host=MongoDB['host'], port=MongoDB['port'])
-        db = self.client['local']
+        self.db = self.client['local']
         #  db.authenticate("local","123456")
-        self.collection = db[MongoDB['collection']]  # 这个collection只需为空即可，不用创建列什么的
-
+        #self.collection = db[MongoDB['collection']]  # 这个collection只需为空即可，不用创建列什么的
     def close_spider(self, spider):
         self.client.close()
 
     def process_item(self, item, spider):
-
-        self.collection.insert_one({"Source": item['Source'],
+        collection = self.db[item['Source']]
+        collection.insert_one({"Source": item['Source'],
                                     "Type": item['Type'],
                                     "Title": item['Title'],
                                     "Content": item['Content'],
