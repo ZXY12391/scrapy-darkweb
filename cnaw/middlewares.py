@@ -18,17 +18,10 @@ class LoginCabycMiddleware:
     # passed objects.
     def __init__(self):
         #登陆后获得的
-
-<<<<<<< HEAD
         self.Authorization="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE2OTkyNTcwNTcsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.PHVP4hPXulvCwCxW6pW-WrzlomDh3OLnq7fBL5kZYDw"
-=======
-        self.Authorization="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE2OTkyNjg3MDIsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.HJd_DOCfBliysjwFbELyaJP5O02mYMErr8NoExzh2i4"
->>>>>>> 75f52e34b3859925b044af1d9c59e3eaa650370a
     def process_request(self, request, spider):
         if spider.name == 'cabyc':
             request.headers['Authorization'] = self.Authorization
-
-
 class LoginTorrezMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
@@ -141,7 +134,7 @@ class LoginZwawwMiddleware:
         if spider.name == 'zwaww':
             if not request.cookies:  # 简单判断是否有cookie，没有的话就设置一下
                 request.cookies = self.cookie
-                #print(request.cookies)
+                print(request.cookies)
             return None
 
     def spider_opened(self, spider):
@@ -196,9 +189,9 @@ class LoginZwawwMiddleware:
             print(web.get_cookies())
             # 获取登录后的URL
             print(self.cookie)
-            with open("cnaw/logged_in_url.txt", "w") as file:
-                file.write(web.current_url)
-            print("登录后的URL:", web.current_url)
+           # with open("cnaw/logged_in_url.txt", "w") as file:
+            #    file.write(web.current_url)
+            #print("登录后的URL:", web.current_url)
             #把URL推到Redis队列
             redis_host = REDIS_HOST
             redis_port = REDIS_PORT

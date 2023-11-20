@@ -2,11 +2,7 @@ import scrapy
 import re
 import datetime
 from cnaw.items import CnawItem
-<<<<<<< HEAD
-from cnaw.settings import REDIS_DB, REDIS_HOST, REDIS_PORT,REDIS_PARAMS
-=======
-from cnaw.settings import REDIS_DB, REDIS_HOST, REDIS_PORT,REDIS_PARAMS,get_redis_connection
->>>>>>> 75f52e34b3859925b044af1d9c59e3eaa650370a
+
 import redis
 from scrapy_redis.spiders import RedisSpider
 from scrapy.linkextractors import LinkExtractor
