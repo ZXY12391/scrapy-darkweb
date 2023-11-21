@@ -12,8 +12,8 @@ class ZwawwSpider(RedisSpider):
     redis_key = 'search_zwaww'
 
     def parse(self, response):
-        print(response.text)
-        print(response.url)
+        #print(response.text)
+        #print(response.url)
         divs = response.xpath("//div[@class='div_index_both'][2]/div")
         for div in divs:
             # print(div)
@@ -34,7 +34,7 @@ class ZwawwSpider(RedisSpider):
 
         # 计算中间页码
         jump_to_page = str(max_page // 2)
-        print(f"中间页为 {jump_to_page}")
+        #print(f"中间页为 {jump_to_page}")
 
         # 提取所有的a标签
         hrefs = response.xpath("/html/body/div/div[3]/table/tr[1]/td/div/a")
@@ -73,7 +73,7 @@ class ZwawwSpider(RedisSpider):
         page_links = page_le.extract_links(response)
         # print(page_links)
         for page in page_links:
-            print(f"有{page.text}页")
+            #print(f"有{page.text}页")
             yield scrapy.Request(
                 url=response.urljoin(page.url),
                 callback=self.parse_url_detail,
@@ -81,7 +81,7 @@ class ZwawwSpider(RedisSpider):
                     'page':page.text
                 }
             )
-            print(f"访问第{page.text}页")
+           #print(f"访问第{page.text}页")
 
 
     def parse_url_detail(self, response):

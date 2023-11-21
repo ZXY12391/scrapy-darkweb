@@ -49,7 +49,7 @@ CONCURRENT_REQUESTS_PER_IP = 32
     #"cnaw.middlewares.CnawSpiderMiddleware": 543,
     #"cnaw.middlewares.LoginMiddleware": 543
 #}
-Proxy='http://10.133.70.204:8118'
+Proxy='http://127.0.0.1:8118'
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
@@ -57,13 +57,11 @@ DOWNLOADER_MIDDLEWARES = {
     "cnaw.middlewares.LoginCabycMiddleware": 542,
     "cnaw.middlewares.ProxyMiddleware":250,
     "cnaw.middlewares.UAMiddleware":299,
-    "cnaw.middlewares.LoginFreeforumMiddleware":297,
     "cnaw.middlewares.LoginKingdomMiddleware": 250,
     "cnaw.middlewares.LoginNemesisMiddleware": 251,
     "cnaw.middlewares.LoginTorrezMiddleware": 252,
     "cnaw.middlewares.LoginZwawwMiddleware": 253,
     "cnaw.middlewares.LoginMGMGrandMiddleware": 253,
-    "cnaw.middlewares.LoginFreecityMiddleware": 254,
 
 }
 #LOG_LEVEL="WARNING"
@@ -108,7 +106,7 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 MongoDB={
-    "host":"10.133.70.204",
+    "host":"10.133.24.54",
     "port":27017,
     "collection":'Kingdom'
 
@@ -119,7 +117,7 @@ Info1={ "userName1":1896236,
 }
 import redis
 # Redis相关配置
-REDIS_HOST = "10.133.70.204"
+REDIS_HOST = "10.133.24.54"
 REDIS_PORT = 6379
 REDIS_DB = 4
 REDIS_PARAMS = {
