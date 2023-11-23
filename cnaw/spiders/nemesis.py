@@ -5,11 +5,10 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
 from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT,get_redis_connection
 import redis
-class NemesisSpider(RedisSpider):
+from cnaw.spiders.basespider import BaseSpider
+class NemesisSpider(BaseSpider,RedisSpider):
     name = "nemesis"
     redis_key = "search_nemesis"
-
-
     def parse(self, response):
         #print(response.text)
         lis=response.xpath("//ul[@class='navbar-nav me-auto']/li")
@@ -21,9 +20,9 @@ class NemesisSpider(RedisSpider):
                 print(response.urljoin(href))
                 yield scrapy.Request(
                                url=response.urljoin(href),
-                               callback=self.parse_good_url,
+                               callback=self.parse_goods_url,
                 )
-    def parse_good_url(self,response):
+    def parse_goods_url(self,response):
         divs=response.xpath("//div[@class='row g-5 g-xl-5']/div")
         for div in divs:
             href=div.xpath("./div/div[1]/div[2]/a/@href").extract_first()
@@ -38,7 +37,7 @@ class NemesisSpider(RedisSpider):
         for page in page_links:
             yield scrapy.Request(
                 url=response.urljoin(page.url),
-                callback=self.parse_good_url,
+                callback=self.parse_goods_url,
             )
 
     def parse_goods_detail(self,response):
@@ -63,23 +62,10 @@ class NemesisSpider(RedisSpider):
         url = response.url
         type1 = response.xpath("//div[@class='fs-7 py-1']/a[1]/text()").extract_first()
         type2 = response.xpath("//div[@class='fs-7 py-1']/a[2]/text()").extract_first()
-        type = []
-        type.append(type1)
-        type.append(type2)
-        item = CnawItem()
-        item['Source'] = source
-        item['Type'] = type
-        item['Title'] = title
-        item['Content'] = content
-        if price_one:
-            item['Price'] = price_one
-        else:
-            item['Price'] = prices
-        item['Publish_time'] = publish_time
-        item['Fetch_time'] = fetch_time
-        item['Url'] = url
-        yield item
-
+        types = []
+        types.append(type1)
+        types.append(type2)
+        yield self.saveData(source, types, title, content, prices, publish_time, fetch_time, url)
 
 
 

@@ -6,11 +6,10 @@ from cnaw.items import CnawItem
 import redis
 from scrapy_redis.spiders import RedisSpider
 from scrapy.linkextractors import LinkExtractor
-
-class TorrezSpider(RedisSpider):
+from cnaw.spiders.basespider import BaseSpider
+class TorrezSpider(BaseSpider,RedisSpider):
     name = "torrez"
     redis_key = "search_torrez"
-
 
     def parse(self, response):
         ul = response.xpath("//ul[@class='sidebar'][1]/li")
@@ -57,19 +56,10 @@ class TorrezSpider(RedisSpider):
     def parse_goods_detail(self, response):
         publish_time = None
         price = response.xpath("//span[@class='itemPrice']/text()").extract_first()
-        product_type = response.meta.get('type')
+        types = response.meta.get('type')
         title = response.xpath("//div[@class='titleHeader mb-2'][1]/h3/text()").extract_first()
         url = response.url
         content = response.xpath("//div[@class='tab-pane active']/p/text()").extract_first()
         source = "Torrez"
-        item = CnawItem()
-        item['Source'] = source
-        item['Type'] = product_type
-        item['Title'] = title
-        item['Content'] = content
-        item['Price'] = price
-        item['Publish_time'] = publish_time
-        item['Fetch_time'] = datetime.datetime.now()
-        item['Url'] = url
-
-        yield item
+        fetch_time = datetime.datetime.now()
+        yield self.saveData(source, types, title, content, price, publish_time, fetch_time, url)

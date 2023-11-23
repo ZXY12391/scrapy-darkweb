@@ -105,8 +105,9 @@ ITEM_PIPELINES = {
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+Host="10.133.24.54"
 MongoDB={
-    "host":"10.133.24.54",
+    "host":Host,
     "port":27017,
     "collection":'Kingdom'
 
@@ -117,7 +118,7 @@ Info1={ "userName1":1896236,
 }
 import redis
 # Redis相关配置
-REDIS_HOST = "10.133.24.54"
+REDIS_HOST = Host
 REDIS_PORT = 6379
 REDIS_DB = 4
 REDIS_PARAMS = {

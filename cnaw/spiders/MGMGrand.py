@@ -5,16 +5,10 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
 from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT,get_redis_connection
 import redis
-class MgmgrandSpider(RedisSpider):
+from cnaw.spiders.basespider import BaseSpider
+class MgmgrandSpider(BaseSpider,RedisSpider):
     name = "MGMGrand"
-    #start_urls = ["http://duysanjqxo4svh35yqkxxe5r54z2xc5tjf6r3ichxd3m2rwcgabf44ad.onion/#subscribe-modal"]
     redis_key = "search_MgmGrand"
-    def __init__(self, *args, **kwargs):
-        super( MgmgrandSpider, self).__init__(*args, **kwargs)
-        url = 'http://duysanjqxo4svh35yqkxxe5r54z2xc5tjf6r3ichxd3m2rwcgabf44ad.onion/#subscribe-modal'
-        redis_conn = get_redis_connection()
-        redis_conn.lpush('search_MgmGrand', url)
-
     def parse(self, response):
         #print(response.text)
         #print(response.text)
@@ -28,15 +22,15 @@ class MgmgrandSpider(RedisSpider):
             if type not in ['Drugs']:
                 yield scrapy.Request(
                     url=response.urljoin(href),
-                    callback=self.parse_good_url,
+                    callback=self.parse_goods_url,
                 )
-    def parse_good_url(self,response):
+    def parse_goods_url(self,response):
         divs=response.xpath("//div[@class='list-products  columns-3']/div")
         for div in divs:
             href=div.xpath("./div[1]/a/@href").extract_first()
             yield scrapy.Request(
                 url=response.urljoin(href),
-                callback=self.parse_good_deatil,
+                callback=self.parse_goods_detail,
             )
             # 翻页
             page_le = LinkExtractor(restrict_xpaths=("//ul[@class='pagination mb-0']/li/a",))
@@ -44,32 +38,23 @@ class MgmgrandSpider(RedisSpider):
             for page in page_links:
                 yield scrapy.Request(
                     url=response.urljoin(page.url),
-                    callback=self.parse_good_url,
+                    callback=self.parse_goods_url,
                 )
 
-    def parse_good_deatil(self,response):
+    def parse_goods_detail(self,response):
         title = response.xpath("//h1[@class='normal-title c-fs-3']/text()").extract_first()
         type1 = response.xpath("//div[@class='c-breadcrumb']/a[3]/text()").extract_first()
         type2 = response.xpath("//div[@class='c-breadcrumb']/a[4]/text()").extract_first()
-        type=[]
-        type.append(type1)
-        type.append(type2)
+        types=[]
+        types.append(type1)
+        types.append(type2)
         content = response.xpath("//div[@class='tab-pane fade  show active ']/pre/text()").extract_first()
-        publish = None
+        publish_time = None
         fetch_time = datetime.datetime.now()
         source = 'MGMGrand'
         url = response.url
         price = response.xpath("//span[@class='col-5']/strong/text()").extract_first()
-        item = CnawItem()
-        item['Source'] = source
-        item['Type'] = type
-        item['Title'] = title
-        item['Content'] = content
-        item['Price'] = price
-        item['Publish_time'] = publish
-        item['Fetch_time'] = fetch_time
-        item['Url'] = url
-        yield item
+        yield self.saveData(source, types, title, content, price, publish_time, fetch_time, url)
 
 
 

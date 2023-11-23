@@ -6,6 +6,9 @@ from selenium import webdriver
 from random import choice
 from cnaw.settings import USER_AGENT_LIST
 import redis
+from cnaw.utils.cookie import getCookie
+import pymongo
+from cnaw.settings import MongoDB
 from cnaw.settings import Proxy
 from cnaw.settings import REDIS_DB,REDIS_HOST,REDIS_PORT,REDIS_PARAMS
 class UAMiddleware:
@@ -33,8 +36,8 @@ class BaseMiddleware:
         proxy = Proxy
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument(f'--proxy-server={proxy}')
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--disable-gpu')  # 在无头模式下禁用GPU加速
+        #chrome_options.add_argument('--headless')
+        #chrome_options.add_argument('--disable-gpu')  # 在无头模式下禁用GPU加速
         web = webdriver.Chrome(options=chrome_options)
         web.get(url)
         return web
@@ -166,25 +169,6 @@ class LoginAsapMiddleware(LoginMiddleware):
         # 获取登录后的URL
         print(self.cookie)
         # web.save_screenshot("screenshot.png")
-class LoginKingdomMiddleware:
-    # Not all methods need to be defined. If a method is not defined,
-    # scrapy acts as if the downloader middleware does not modify the
-    # passed objects.
-        def __init__(self):
-            # 登陆后获得的 Cookie 字符串
-            cookie_string = "PHPSESSID=hnrl7ig0a3so7v6poai6ci65ss"
-            # 将 Cookie 字符串分割成键值对
-            cookie_pairs = cookie_string.split('; ')
-            #print(cookie_pairs)
-            # 创建一个字典来存储 Cookie 键值对
-            self.cookie = {}
-            for pair in cookie_pairs:
-                key, value = pair.strip().split('=')
-                self.cookie[key] = value
-            print(self.cookie)
-        def process_request(self, request, spider):
-            if spider.name == 'kingdom':
-                request.cookies = self.cookie
 class LoginTorrezMiddleware(LoginMiddleware):
     target_spider = 'torrez'
     login_url = "http://mmd32xdcmzrdlpoapkpf43dxig5iufbpkkl76qnijgzadythu55fvkqd.onion"
@@ -274,7 +258,28 @@ class LoginCabycMiddleware:
     # passed objects.
     def __init__(self):
         #登陆后获得的
-        self.Authorization="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE2OTkyNTcwNTcsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.PHVP4hPXulvCwCxW6pW-WrzlomDh3OLnq7fBL5kZYDw"
+        self.Authorization=getCookie('cookie_cabyc')
+        print(self.Authorization)
     def process_request(self, request, spider):
         if spider.name == 'cabyc':
             request.headers['Authorization'] = self.Authorization
+
+class LoginKingdomMiddleware:
+    # Not all methods need to be defined. If a method is not defined,
+    # scrapy acts as if the downloader middleware does not modify the
+    # passed objects.
+        def __init__(self):
+            # 登陆后获得的 Cookie 字符串
+            cookie_string = getCookie('cookie_kingdom')
+            # 将 Cookie 字符串分割成键值对
+            cookie_pairs = cookie_string.split('; ')
+            #print(cookie_pairs)
+            # 创建一个字典来存储 Cookie 键值对
+            self.cookie = {}
+            for pair in cookie_pairs:
+                key, value = pair.strip().split('=')
+                self.cookie[key] = value
+            print(self.cookie)
+        def process_request(self, request, spider):
+            if spider.name == 'kingdom':
+                request.cookies = self.cookie
