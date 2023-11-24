@@ -6,6 +6,7 @@ from selenium import webdriver
 from random import choice
 from cnaw.settings import USER_AGENT_LIST
 import redis
+from cnaw.settings import get_redis_connection
 from cnaw.utils.cookie import getCookie
 import pymongo
 from cnaw.settings import MongoDB
@@ -25,6 +26,7 @@ class ProxyMiddleware:
 class BaseMiddleware:
     def __init__(self):
         self.cookie = {}
+        self.redis_conn = get_redis_connection()
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -63,6 +65,11 @@ class LoginZwawwMiddleware(LoginMiddleware):
     target_spider = 'zwaww'
     login_url = "http://mxxxxxxxs4uqwd6cylditj7rh7zaz2clh7ofgik2z5jpeq5ixn4ziayd.onion"
     def login_logic(self, spider, web):
+        cookie_name = 'Zwaw_cookie'
+        if self.redis_conn.exists(cookie_name):
+            print("Using existing cookie from Redis.")
+            self.cookie = self.redis_conn.hgetall(cookie_name)
+            return
         wait = WebDriverWait(web, 40)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
         element = wait.until(
@@ -104,6 +111,7 @@ class LoginZwawwMiddleware(LoginMiddleware):
         print(web.get_cookies())
             # 获取登录后的URL
         print(self.cookie)
+        self.redis_conn.hmset(cookie_name, self.cookie)
         print("登录后的URL:", web.current_url)
          #把URL推到Redis队列
         redis_host = REDIS_HOST
@@ -116,6 +124,11 @@ class LoginNemesisMiddleware(LoginMiddleware):
     target_spider = 'nemesis'
     login_url = "http://wvp2anhcslscv7tg3kpbdf2oklhaelhla72l3nkzndubqrjldrjai3id.onion"
     def login_logic(self, spider, web):
+        cookie_name = 'Nemesis_cookie'
+        if self.redis_conn.exists(cookie_name):
+            print("Using existing cookie from Redis.")
+            self.cookie = self.redis_conn.hgetall(cookie_name)
+            return
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
         element = wait.until(
@@ -125,10 +138,16 @@ class LoginNemesisMiddleware(LoginMiddleware):
         print(web.get_cookies())
         # 获取登录后的URL
         print(self.cookie)
+        self.redis_conn.hmset(cookie_name, self.cookie)
 class LoginAsapMiddleware(LoginMiddleware):
     target_spider = 'asap'
     login_url = "http://asap4g7boedkl3fxbnf2unnnr6kpxnwoewzw4vakaxiuzfdo5xpmy6ad.onion/auth/login"
     def login_logic(self, spider, web):
+        cookie_name='Asap_cookie'
+        if self.redis_conn.exists(cookie_name):
+            print("Using existing cookie from Redis.")
+            self.cookie = self.redis_conn.hgetall(cookie_name)
+            return
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
         element = wait.until(
@@ -139,10 +158,6 @@ class LoginAsapMiddleware(LoginMiddleware):
         element = wait.until(
             EC.visibility_of_element_located(
                 (By.XPATH, "//*[@id='Username']")))
-        self.cookie = {item['name']: item['value'] for item in web.get_cookies()}
-        print(web.get_cookies())
-        # 获取登录后的URL
-        print(self.cookie)
         userName1 = "wenyan"
         passwd1 = "asappass"
         web.find_element(by="xpath",
@@ -168,11 +183,16 @@ class LoginAsapMiddleware(LoginMiddleware):
         print(web.get_cookies())
         # 获取登录后的URL
         print(self.cookie)
-        # web.save_screenshot("screenshot.png")
+        self.redis_conn.hmset(cookie_name, self.cookie)
 class LoginTorrezMiddleware(LoginMiddleware):
     target_spider = 'torrez'
     login_url = "http://mmd32xdcmzrdlpoapkpf43dxig5iufbpkkl76qnijgzadythu55fvkqd.onion"
     def login_logic(self, spider, web):
+        cookie_name = 'Torrez_cookie'
+        if self.redis_conn.exists(cookie_name):
+            print("Using existing cookie from Redis.")
+            self.cookie = self.redis_conn.hgetall(cookie_name)
+            return
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
         element = wait.until(
@@ -220,10 +240,16 @@ class LoginTorrezMiddleware(LoginMiddleware):
         print(web.get_cookies())
         # 获取登录后的URL
         print(self.cookie)
+        self.redis_conn.hmset(cookie_name, self.cookie)
 class LoginMGMGrandMiddleware(LoginMiddleware):
     target_spider = 'MGMGrand'
     login_url = "http://duysanjqxo4svh35yqkxxe5r54z2xc5tjf6r3ichxd3m2rwcgabf44ad.onion/signin"
     def login_logic(self, spider, web):
+        cookie_name = 'MGMGrand_cookie'
+        if self.redis_conn.exists(cookie_name):
+            print("Using existing cookie from Redis.")
+            self.cookie = self.redis_conn.hgetall(cookie_name)
+            return
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
         with open("page.html", "w", encoding="utf-8") as file:
@@ -252,6 +278,7 @@ class LoginMGMGrandMiddleware(LoginMiddleware):
         print(web.get_cookies())
         # 获取登录后的URL
         print(self.cookie)
+        self.redis_conn.hmset(cookie_name, self.cookie)
 class LoginCabycMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
