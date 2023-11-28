@@ -45,9 +45,10 @@ def getCookie(cookieName):
     # 随机选择一个最新的 cookie
     if cookies:
         cookie_values = cookies[0]['cookie']  # 获取 'cookie' 键对应的值，即列表
-        random_cookie = random.choice(cookie_values)  # 从列表中选择一个值
-        print(random_cookie)
-        return random_cookie
+        #random_cookie = random.choice(cookie_values)  # 从列表中选择一个值
+        #print(random_cookie)
+        #return random_cookie
+        return cookie_values
     else:
         return None
 
@@ -55,7 +56,18 @@ def getCookie(cookieName):
 def main():
     collection = ConnectMongo()
     insert_Cookies_to_mongodb(collection)
-    getCookie('cookie_kingdom')
-
+    #cookie=getCookie('cookie_kingdom')
+    #print(cookie)
 if __name__ == "__main__":
     main()
+    # cookies_list = []  # 初始化一个空列表用于存储多个字典形式的Cookie
+    # cookies = getCookie('cookie_kingdom')
+    # for cookie in cookies:
+    #     cookie_dict = {}  # 创建一个字典用于存储键值对
+    #     cookie_pairs = cookie.split('; ')
+    #     for pair in cookie_pairs:
+    #         key, value = pair.strip().split('=')
+    #         cookie_dict[key] = value
+    #     cookies_list.append(cookie_dict)  # 将每个字典添加到列表中
+    # random_cookie = random.choice(cookies_list)
+    # print(random_cookie)

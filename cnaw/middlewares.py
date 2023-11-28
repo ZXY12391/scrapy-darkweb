@@ -297,21 +297,20 @@ class LoginCabycMiddleware:
             request.headers['Authorization'] = self.Authorization
 
 class LoginKingdomMiddleware:
-    # Not all methods need to be defined. If a method is not defined,
-    # scrapy acts as if the downloader middleware does not modify the
-    # passed objects.
-        def __init__(self):
-            # 登陆后获得的 Cookie 字符串
-            cookie_string = getCookie('cookie_kingdom')
-            # 将 Cookie 字符串分割成键值对
-            cookie_pairs = cookie_string.split('; ')
-            #print(cookie_pairs)
-            # 创建一个字典来存储 Cookie 键值对
-            self.cookie = {}
+    def __init__(self):
+        self.cookies_list = []  # 初始化一个空列表用于存储多个字典形式的Cookie
+        cookies = getCookie('cookie_kingdom')
+        for cookie in cookies:
+            cookie_dict = {}  # 创建一个字典用于存储键值对
+            cookie_pairs = cookie.split('; ')
             for pair in cookie_pairs:
                 key, value = pair.strip().split('=')
-                self.cookie[key] = value
-            print(self.cookie)
-        def process_request(self, request, spider):
-            if spider.name == 'kingdom':
-                request.cookies = getCookie('cookie_kingdom')
+                cookie_dict[key] = value
+            self.cookies_list.append(cookie_dict)  # 将每个字典添加到列表中
+
+    def process_request(self, request, spider):
+        if spider.name == 'kingdom':
+            # 从列表中随机选择一个字典作为请求的 cookies 属性
+            random_cookie = random.choice(self.cookies_list)
+            request.cookies = random_cookie
+            print(request.cookies)
