@@ -46,17 +46,9 @@ class NemesisSpider(BaseSpider,RedisSpider):
         content = ' '.join(text_content)
         publish=response.xpath("//div[@class='fs-7 text-gray-400']//text()").extract()
         publish_time = ' '.join(publish)
-        price_one=None
-        prices = []
+        price=None
         if response.xpath("//div[@class='text-gray-800 fs-1 fw-bolder mt-6']/text()").extract_first():
-            price_one=response.xpath("//div[@class='text-gray-800 fs-1 fw-bolder mt-6']/text()").extract_first()
-        else:
-            labels=response.xpath("//div[@class='mt-6']/label")
-            for label in labels:
-                price_1=label.xpath(".//text()").extract()
-                price = ' '.join(price_1)
-                price=price.strip()
-                prices.append(price)
+            price=response.xpath("//div[@class='text-gray-800 fs-1 fw-bolder mt-6']/text()").extract_first()
         fetch_time = datetime.datetime.now()
         source = 'Nemesis'
         url = response.url
@@ -65,7 +57,7 @@ class NemesisSpider(BaseSpider,RedisSpider):
         types = []
         types.append(type1)
         types.append(type2)
-        yield self.saveData(source, types, title, content, prices, publish_time, fetch_time, url)
+        yield self.saveData(source, types, title, content, price, publish_time, fetch_time, url)
 
 
 

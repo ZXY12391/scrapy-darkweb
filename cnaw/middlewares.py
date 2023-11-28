@@ -192,10 +192,10 @@ class LoginTorrezMiddleware(LoginMiddleware):
     login_url = "http://mmd32xdcmzrdlpoapkpf43dxig5iufbpkkl76qnijgzadythu55fvkqd.onion"
     def login_logic(self, spider):
         cookie_name = 'Torrez_cookie'
-        if self.redis_conn.exists(cookie_name)and len(self.redis_conn.hgetall(cookie_name)) > 5:
-            print("Using existing cookie from Redis.")
-            self.cookie = random.choice(list(self.redis_conn.hvals(cookie_name)))
-            return
+        #if self.redis_conn.exists(cookie_name)and len(self.redis_conn.hgetall(cookie_name)) > 5:
+         #   print("Using existing cookie from Redis.")
+          #  self.cookie = random.choice(list(self.redis_conn.hvals(cookie_name)))
+           # return
         web = self.setup_webdriver(spider, self.login_url)
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
