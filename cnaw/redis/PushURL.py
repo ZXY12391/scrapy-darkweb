@@ -11,7 +11,8 @@ def ConnectMongo():
 def Pushurl():
     redis_conn = get_redis_connection()
     collection = ConnectMongo()
-
+    # 清空整个 Redis 数据库
+    redis_conn.flushdb()
     # 获取 MongoDB 中的 URL 数据
     urls = collection.find({}, {'_id': 0, 'name': 1, 'url': 1})
     # 将每个 URL 推送到相应的 Redis 队列中

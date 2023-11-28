@@ -12,7 +12,7 @@ def insert_Cookies_to_mongodb(collection):
     cookies = {
         # 长安不夜城用户名：wenyancabyc密码：Cabycpass1*
         'cookie_cabyc': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE3MDA4MTM3OTksImhpZCI6IjEzMDMxNDI1ODYiLCJsZXZlbCI6MH0.GIduxu1CQDkfcn-twz3sswWcSjLX_bKnDkZ1aPYXKoI',
-        'cookie_kingdom': 'PHPSESSID=b254j4fu5se0q6f61f23jdf54q',
+        'cookie_kingdom': 'PHPSESSID=91pdeje2t0jca15q5k6bksc6jd',
     }
     for key, cookie in cookies.items():
         current_time = datetime.now()  # 获取当前时间

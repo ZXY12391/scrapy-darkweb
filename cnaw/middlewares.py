@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from scrapy import signals
 from selenium import webdriver
 from random import choice
+import random
 from cnaw.settings import USER_AGENT_LIST
 import redis
 from cnaw.settings import get_redis_connection
@@ -191,9 +192,9 @@ class LoginTorrezMiddleware(LoginMiddleware):
     login_url = "http://mmd32xdcmzrdlpoapkpf43dxig5iufbpkkl76qnijgzadythu55fvkqd.onion"
     def login_logic(self, spider):
         cookie_name = 'Torrez_cookie'
-        if self.redis_conn.exists(cookie_name):
+        if self.redis_conn.exists(cookie_name)and len(self.redis_conn.hgetall(cookie_name)) > 5:
             print("Using existing cookie from Redis.")
-            self.cookie = self.redis_conn.hgetall(cookie_name)
+            self.cookie = random.choice(list(self.redis_conn.hvals(cookie_name)))
             return
         web = self.setup_webdriver(spider, self.login_url)
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
@@ -313,4 +314,4 @@ class LoginKingdomMiddleware:
             print(self.cookie)
         def process_request(self, request, spider):
             if spider.name == 'kingdom':
-                request.cookies = self.cookie
+                request.cookies = getCookie('cookie_kingdom')
