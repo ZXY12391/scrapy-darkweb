@@ -9,12 +9,11 @@ NEWSPIDER_MODULE = "cnaw.spiders"
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 64
+CONCURRENT_REQUESTS = 64
 
-DOWNLOAD_DELAY = 2
+DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
-#CONCURRENT_REQUESTS_PER_DOMAIN = 32
-#CONCURRENT_REQUESTS_PER_IP = 32
+
 #LOG_LEVEL="ERROR"
 
 Proxy='http://127.0.0.1:8118'

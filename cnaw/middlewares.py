@@ -9,6 +9,7 @@ from cnaw.settings import USER_AGENT_LIST
 import redis
 from cnaw.settings import get_redis_connection
 from cnaw.utils.cookie import getCookie
+from cnaw.utils.account import getAccount
 import pymongo
 from cnaw.settings import MongoDB
 from cnaw.settings import Proxy
@@ -126,10 +127,6 @@ class LoginNemesisMiddleware(LoginMiddleware):
     login_url = "http://wvp2anhcslscv7tg3kpbdf2oklhaelhla72l3nkzndubqrjldrjai3id.onion"
     def login_logic(self, spider):
         cookie_name = 'Nemesis_cookie'
-        if self.redis_conn.exists(cookie_name):
-            print("Using existing cookie from Redis.")
-            self.cookie = self.redis_conn.hgetall(cookie_name)
-            return
         web = self.setup_webdriver(spider, self.login_url)
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
@@ -146,10 +143,6 @@ class LoginAsapMiddleware(LoginMiddleware):
     login_url = "http://asap4g7boedkl3fxbnf2unnnr6kpxnwoewzw4vakaxiuzfdo5xpmy6ad.onion/auth/login"
     def login_logic(self, spider):
         cookie_name='Asap_cookie'
-        if self.redis_conn.exists(cookie_name):
-            print("Using existing cookie from Redis.")
-            self.cookie = self.redis_conn.hgetall(cookie_name)
-            return
         web = self.setup_webdriver(spider, self.login_url)
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
@@ -161,8 +154,9 @@ class LoginAsapMiddleware(LoginMiddleware):
         element = wait.until(
             EC.visibility_of_element_located(
                 (By.XPATH, "//*[@id='Username']")))
-        userName1 = "wenyan"
-        passwd1 = "asappass"
+        account = getAccount('Asap')
+        userName1 = account['username']
+        passwd1 = account['password']
         web.find_element(by="xpath",
                          value="//*[@id='Username']").send_keys(
             userName1)
@@ -192,10 +186,10 @@ class LoginTorrezMiddleware(LoginMiddleware):
     login_url = "http://mmd32xdcmzrdlpoapkpf43dxig5iufbpkkl76qnijgzadythu55fvkqd.onion"
     def login_logic(self, spider):
         cookie_name = 'Torrez_cookie'
-        #if self.redis_conn.exists(cookie_name)and len(self.redis_conn.hgetall(cookie_name)) > 5:
-         #   print("Using existing cookie from Redis.")
-          #  self.cookie = random.choice(list(self.redis_conn.hvals(cookie_name)))
-           # return
+        # if self.redis_conn.exists(cookie_name):
+        #     print("Using existing cookie from Redis.")
+        #     self.cookie = self.redis_conn.hgetall(cookie_name)
+        #     return
         web = self.setup_webdriver(spider, self.login_url)
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
@@ -223,8 +217,9 @@ class LoginTorrezMiddleware(LoginMiddleware):
         element = wait.until(
             EC.visibility_of_element_located(
                 (By.XPATH, "//*[@id='username']")))
-        userName1 = "wenyan"
-        passwd1 = "torrezpass"
+        account = getAccount('Torrez')
+        userName1 = account['username']
+        passwd1 = account['password']
         web.find_element(by="xpath",
                          value="//*[@id='username']").send_keys(
             userName1)
@@ -250,18 +245,15 @@ class LoginMGMGrandMiddleware(LoginMiddleware):
     login_url = "http://duysanjqxo4svh35yqkxxe5r54z2xc5tjf6r3ichxd3m2rwcgabf44ad.onion/signin"
     def login_logic(self, spider):
         cookie_name = 'MGMGrand_cookie'
-        if self.redis_conn.exists(cookie_name):
-            print("Using existing cookie from Redis.")
-            self.cookie = self.redis_conn.hgetall(cookie_name)
-            return
         web = self.setup_webdriver(spider, self.login_url)
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
         with open("page.html", "w", encoding="utf-8") as file:
             file.write(web.page_source)
         element = wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@id='username']")))
-        userName1 = "wenyanMGM"
-        passwd1 = "mgmpassword"
+        account=getAccount('MGMGrand')
+        userName1 = account['username']
+        passwd1 = account['password']
         web.find_element(by="xpath",
                          value="//input[@id='username']").send_keys(
             userName1)
@@ -295,22 +287,32 @@ class LoginCabycMiddleware:
     def process_request(self, request, spider):
         if spider.name == 'cabyc':
             request.headers['Authorization'] = self.Authorization
-
 class LoginKingdomMiddleware:
     def __init__(self):
-        self.cookies_list = []  # 初始化一个空列表用于存储多个字典形式的Cookie
-        cookies = getCookie('cookie_kingdom')
-        for cookie in cookies:
-            cookie_dict = {}  # 创建一个字典用于存储键值对
-            cookie_pairs = cookie.split('; ')
-            for pair in cookie_pairs:
-                key, value = pair.strip().split('=')
-                cookie_dict[key] = value
-            self.cookies_list.append(cookie_dict)  # 将每个字典添加到列表中
+        # self.cookies_list = []  # 初始化一个空列表用于存储多个字典形式的Cookie
+        # cookies = getCookie('cookie_kingdom')
+        # for cookie in cookies:
+        #     cookie_dict = {}  # 创建一个字典用于存储键值对
+        #     cookie_pairs = cookie.split('; ')
+        #     for pair in cookie_pairs:
+        #         key, value = pair.strip().split('=')
+        #         cookie_dict[key] = value
+        #     self.cookies_list.append(cookie_dict)  # 将每个字典添加到列表中
+        cookie_string = "vv=zz"
+        # 将 Cookie 字符串分割成键值对
+        cookie_pairs = cookie_string.split('; ')
+        # print(cookie_pairs)
+        # 创建一个字典来存储 Cookie 键值对
+        self.cookie = {}
+        for pair in cookie_pairs:
+            key, value = pair.strip().split('=')
+            self.cookie[key] = value
+        print(self.cookie)
 
     def process_request(self, request, spider):
         if spider.name == 'kingdom':
             # 从列表中随机选择一个字典作为请求的 cookies 属性
-            random_cookie = random.choice(self.cookies_list)
-            request.cookies = random_cookie
-            print(request.cookies)
+            # random_cookie = random.choice(self.cookies_list)
+            # request.cookies = random_cookie
+            # print(request.cookies)
+            request.cookies = self.cookie

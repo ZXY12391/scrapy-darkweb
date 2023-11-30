@@ -31,7 +31,7 @@ http://freedxxxrbrtxigoiyf333cradalwequhwocpv5wime7cxkrsk2bidqd.onion/index.php?
 8.ASAP
 http://asap4g7boedkl3fxbnf2unnnr6kpxnwoewzw4vakaxiuzfdo5xpmy6ad.onion/
 介绍：https://livedarknet.com/p/the-best-deep-web-markets-for-2022/
-用户名：wenyan
+用户名：wenyan,asaphaha
 密码：asappass
 pin:123456
 9.Bohemia
@@ -44,8 +44,9 @@ username:wenyanhaha
 phrase:ZXCV
 ② 用户名：kingdomhaha 密码：kingdompass
 11.MGM GRAND
-用户：wenyanMGM
-密码：mgmpassword
+用户：wenyanMGM,mgmgrandhaha,MGMGRANDXIXI
+密码：mgmpassword,mgmgrandpass,mgmgrandpass
+
 pin:123456
 https://darkcatalog.com/mgm-grand-market/
 助记词：slightly trace further matter drove heaven wound cover sharp lung skip whatever clear joke touch
