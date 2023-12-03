@@ -9,7 +9,7 @@ class CnawPipeline:
     num=0
     def open_spider(self, spider):
         self.client = pymongo.MongoClient(host=MongoDB['host'], port=MongoDB['port'])
-        self.db = self.client['local']
+        self.db = self.client['DW']
         #  db.authenticate("local","123456")
         #self.collection = db[MongoDB['collection']]  # 这个collection只需为空即可，不用创建列什么的
     def close_spider(self, spider):

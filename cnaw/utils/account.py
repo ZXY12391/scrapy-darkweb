@@ -4,7 +4,7 @@ from datetime import datetime
 
 def ConnectMongo():
     client = pymongo.MongoClient(host=MongoDB['host'], port=MongoDB['port'])
-    db = client['local']
+    db = client['DW']
     # db.authenticate("local","123456")
     collection = db['Account']
     return collection

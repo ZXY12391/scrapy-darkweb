@@ -41,11 +41,10 @@ ITEM_PIPELINES = {
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
-Host="223.129.87.17"
+Host="172.31.106.104"
 MongoDB={
     "host":Host,
     "port":27017,
-    "collection":'Kingdom'
 
 }
 import redis
@@ -54,7 +53,7 @@ REDIS_HOST = Host
 REDIS_PORT = 6379
 REDIS_DB = 4
 REDIS_PARAMS = {
-    "password": "wenyan",
+    "password": "zxcvbn",
 }
 def get_redis_connection():
     # 初始化Redis连接

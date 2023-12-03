@@ -19,7 +19,7 @@ def insert_Cookies_to_mongodb(collection):
         collection.insert_one({'name': key, 'cookie': cookie, 'timestamp': current_time})
 def getCookie(cookieName):
     client = pymongo.MongoClient(host=MongoDB['host'], port=MongoDB['port'])
-    db = client['local']
+    db = client['DW']
     collection = db['Cookie']
 
     # 按时间戳倒序排序，选择最新的记录
