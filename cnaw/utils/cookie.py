@@ -1,9 +1,11 @@
+import sys
+sys.path.append(r"C:\Users\26347\Desktop\pythonProject\cnaw")
 import pymongo
-from cnaw.settings import MongoDB
+from cnaw.settings  import MongoDB
 from datetime import datetime
 def ConnectMongo():
     client = pymongo.MongoClient(host=MongoDB['host'], port=MongoDB['port'])
-    db = client['local']
+    db = client['DW']
     # db.authenticate("local","123456")
     collection = db['Cookie']
     return collection
@@ -11,7 +13,7 @@ def ConnectMongo():
 def insert_Cookies_to_mongodb(collection):
     cookies = {
         # 长安不夜城用户名：wenyancabyc密码：Cabycpass1*
-        'cookie_cabyc': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE3MDEzMjQ5MjEsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.0NS5GVUGvRzBUbhJA3cyFk7eJGuSUpj-Lte8YtAPGXI',
+        'cookie_cabyc': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE3MDE3NDgxMzIsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.9b_0V_O6wjDNBEOkItKDnAmpj5K6Vpa7Cc0freSVdUE',
         'cookie_kingdom': 'PHPSESSID=b254j4fu5se0q6f61f23jdf54q',
     }
     for key, cookie in cookies.items():

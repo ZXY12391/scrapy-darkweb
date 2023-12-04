@@ -4,7 +4,7 @@ from cnaw.settings import MongoDB
 
 def ConnectMongo():
     client = pymongo.MongoClient(host=MongoDB['host'], port=MongoDB['port'])
-    db = client['local']
+    db = client['DW']
     # db.authenticate("local","123456")
     collection = db['StartURL']
     return collection
@@ -15,7 +15,7 @@ def insert_urls_to_mongodb(collection):
         'search_asap': 'http://asap4g7boedkl3fxbnf2unnnr6kpxnwoewzw4vakaxiuzfdo5xpmy6ad.onion/',
         'search_kingdom': 'http://kingdomm7v6yed55o2rbspvs4exn5bzfxdizqaav27tw6gw4zc65vdad.onion/?t=a006523b031de572',
         'search_MgmGrand': 'http://duysanjqxo4svh35yqkxxe5r54z2xc5tjf6r3ichxd3m2rwcgabf44ad.onion/#subscribe-modal',
-        'search_nemesis': 'http://wvp2anhcslscv7tg3kpbdf2oklhaelhla72l3nkzndubqrjldrjai3id.onion',
+        'search_nemesis': 'http://nemesis555nchzn2dogee6mlc7xxgeeshqirmh3yzn4lo5cnd4s5a4yd.onion/',
         'search_torrez': 'http://mmd32xdcmzrdlpoapkpf43dxig5iufbpkkl76qnijgzadythu55fvkqd.onion/home',
         #'search_zwaww': 'http://mxxxxxxxsjznlccmh5p64nambxuoklg44kmjscl2nkvgoolnzeiqbmqd.onion',
         'search_freecity': 'http://xbtppbb7oz5j2stohmxzvkprpqw5dwmhhhdo2ygv6c7cs4u46ysufjyd.onion/market'

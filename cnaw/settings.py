@@ -5,7 +5,8 @@ SPIDER_MODULES = ["cnaw.spiders"]
 NEWSPIDER_MODULE = "cnaw.spiders"
 
 
-
+import sys
+#sys.path.append(r"C:\Users\26347\Desktop\pythonProject\cnaw")
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
@@ -17,6 +18,7 @@ DOWNLOAD_DELAY = 1
 #LOG_LEVEL="ERROR"
 
 Proxy='http://127.0.0.1:8118'
+
 
 DOWNLOADER_MIDDLEWARES = {
     "cnaw.middlewares.LoginAsapMiddleware": 298,

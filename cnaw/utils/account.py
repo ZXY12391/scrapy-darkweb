@@ -1,7 +1,8 @@
 import pymongo
 from cnaw.settings import MongoDB
 from datetime import datetime
-
+import sys
+sys.path.append(r"C:\Users\26347\Desktop\pythonProject\cnaw")
 def ConnectMongo():
     client = pymongo.MongoClient(host=MongoDB['host'], port=MongoDB['port'])
     db = client['DW']
@@ -35,7 +36,7 @@ def insert_Accounts_to_mongodb(collection):
 
 def getAccount(accountType):
     client = pymongo.MongoClient(host=MongoDB['host'], port=MongoDB['port'])
-    db = client['local']
+    db = client['DW']
     collection = db['Account']
 
     # 选择一个标签为0的账户，并返回其账号用户名和密码，然后将其标签改为1

@@ -4,7 +4,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from scrapy import signals
 from selenium import webdriver
 from random import choice
-import random
 from cnaw.settings import USER_AGENT_LIST
 import redis
 from cnaw.settings import get_redis_connection
@@ -41,7 +40,6 @@ class BaseMiddleware:
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument(f'--proxy-server={proxy}')
         chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-gpu')
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument('--headless')
         #chrome_options.add_argument('--disable-gpu')  # 在无头模式下禁用GPU加速
@@ -86,8 +84,7 @@ class LoginZwawwMiddleware(LoginMiddleware):
                     (By.XPATH, "/html/body/div/div[3]/div[1]/a[1]")))
         web.find_element(by="xpath", value="/html/body/div/div[3]/div[1]/a[1]").click()
          # 使用显式等待等待元素可见
-        element = wait.until(EC.visibility_of_element_located(
-                (By.XPATH, "/html/body/div/div[3]/form/fieldset/input[1]")))
+        element = wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div/div[3]/form/fieldset/input[1]")))
         userName1 = "1896236"
         passwd1 = "1234awxmhh"
         web.find_element(by="xpath",
@@ -95,17 +92,13 @@ class LoginZwawwMiddleware(LoginMiddleware):
                 userName1)
         web.find_element(by="xpath",
                              value="/html/body/div/div[3]/form/fieldset/input[2]").click()
-        element = wait.until(
-                EC.visibility_of_element_located(
-                    (By.XPATH, "/html/body/div/div[3]/form/fieldset/input[1]")))
+        element = wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div/div[3]/form/fieldset/input[1]")))
         web.find_element(by="xpath",
                              value="/html/body/div/div[3]/form/fieldset/input[1]").send_keys(
                 passwd1)
         web.find_element(by="xpath",
                              value="/html/body/div/div[3]/form/fieldset/input[2]").click()
-        element = wait.until(
-                EC.visibility_of_element_located(
-                    (By.XPATH, "/html/body/div/div[2]/form/fieldset/input[1]")))
+        element = wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div/div[2]/form/fieldset/input[1]")))
             # print(web.page_source)
         web.find_element(by="xpath",
                              value="/html/body/div/div[2]/form/fieldset/input[1]").send_keys(
@@ -127,15 +120,13 @@ class LoginZwawwMiddleware(LoginMiddleware):
         redis_conn.lpush('search_zwaww', web.current_url)
 class LoginNemesisMiddleware(LoginMiddleware):
     target_spider = 'nemesis'
-    login_url = "http://wvp2anhcslscv7tg3kpbdf2oklhaelhla72l3nkzndubqrjldrjai3id.onion"
+    login_url = "http://nemesis555nchzn2dogee6mlc7xxgeeshqirmh3yzn4lo5cnd4s5a4yd.onion/"
     def login_logic(self, spider):
         cookie_name = 'Nemesis_cookie'
         web = self.setup_webdriver(spider, self.login_url)
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
-        element = wait.until(
-            EC.visibility_of_element_located(
-                (By.XPATH, "/html/body/div/nav[2]/div/div/ul/li[2]/a")))
+        element = wait.until(EC.visibility_of_element_located((By.XPATH, "//a[@class='nav-link fw-bold text-gray-700 text-hover-primary bg-hover-light rounded-1 px-4 py-3']")))
         self.cookie = {item['name']: item['value'] for item in web.get_cookies()}
         print(web.get_cookies())
         # 获取登录后的URL
@@ -149,14 +140,9 @@ class LoginAsapMiddleware(LoginMiddleware):
         web = self.setup_webdriver(spider, self.login_url)
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
-        element = wait.until(
-            EC.visibility_of_element_located(
-                (By.XPATH, "//div[@class='image']")))
         # 刷新页面
         web.refresh()
-        element = wait.until(
-            EC.visibility_of_element_located(
-                (By.XPATH, "//*[@id='Username']")))
+        #element = wait.until(EC.visibility_of_element_located((By.XPATH, "//*[@id='Username']")))
         account = getAccount('Asap')
         userName1 = account['username']
         passwd1 = account['password']
@@ -176,9 +162,7 @@ class LoginAsapMiddleware(LoginMiddleware):
                          value="//*[@id='Captcha']").send_keys(captcha_input)
         web.find_element(by="xpath", value="//button").click()
         web.refresh()
-        element = wait.until(
-            EC.visibility_of_element_located(
-                (By.XPATH, "/html/body/div/div[2]/nav/section/section[2]/label")))
+        #element = wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div/div[2]/nav/section/section[2]/label")))
         self.cookie = {item['name']: item['value'] for item in web.get_cookies()}
         print(web.get_cookies())
         # 获取登录后的URL
@@ -196,9 +180,7 @@ class LoginTorrezMiddleware(LoginMiddleware):
         web = self.setup_webdriver(spider, self.login_url)
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
-        element = wait.until(
-            EC.visibility_of_element_located(
-                (By.XPATH, "//img")))
+        #element = wait.until(EC.visibility_of_element_located((By.XPATH, "//img")))
         img_element = web.find_element(by="xpath", value="//img")
         # 截取SVG元素并保存为图片
         img_element.screenshot("captchatorrez1.png")
@@ -217,9 +199,7 @@ class LoginTorrezMiddleware(LoginMiddleware):
         minute_option = minute_select.find_element(By.XPATH, f"//option[@value='{captcha_input_minute}']")
         minute_option.click()
         web.find_element(by="xpath", value="//button").click()
-        element = wait.until(
-            EC.visibility_of_element_located(
-                (By.XPATH, "//*[@id='username']")))
+        #element = wait.until(EC.visibility_of_element_located((By.XPATH, "//*[@id='username']")))
         account = getAccount('Torrez')
         userName1 = account['username']
         passwd1 = account['password']
@@ -251,9 +231,7 @@ class LoginMGMGrandMiddleware(LoginMiddleware):
         web = self.setup_webdriver(spider, self.login_url)
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
-        with open("page.html", "w", encoding="utf-8") as file:
-            file.write(web.page_source)
-        element = wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@id='username']")))
+        #element = wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@id='username']")))
         account=getAccount('MGMGrand')
         userName1 = account['username']
         passwd1 = account['password']

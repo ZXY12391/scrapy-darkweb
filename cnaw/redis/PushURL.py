@@ -1,10 +1,11 @@
+import sys
+sys.path.append(r"C:\Users\26347\Desktop\pythonProject\cnaw")
 from cnaw.settings import get_redis_connection
 import pymongo
 from cnaw.settings import MongoDB
-
 def ConnectMongo():
     client = pymongo.MongoClient(host=MongoDB['host'], port=MongoDB['port'])
-    db = client['local']
+    db = client['DW']
     collection = db['StartURL']
     return collection
 
