@@ -1,8 +1,8 @@
+import sys
+sys.path.append(r"C:\Users\26347\Desktop\pythonProject\cnaw")
 import pymongo
 from cnaw.settings import MongoDB
 from datetime import datetime
-import sys
-sys.path.append(r"C:\Users\26347\Desktop\pythonProject\cnaw")
 def ConnectMongo():
     client = pymongo.MongoClient(host=MongoDB['host'], port=MongoDB['port'])
     db = client['DW']

@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -142,7 +144,11 @@ class LoginAsapMiddleware(LoginMiddleware):
         # 使用显式等待等待元素可见
         # 刷新页面
         web.refresh()
-        #element = wait.until(EC.visibility_of_element_located((By.XPATH, "//*[@id='Username']")))
+        #print(web.page_source)
+        element = wait.until(EC.visibility_of_element_located((By.XPATH, "//button[1]")))
+        web.refresh()
+        #print(web.page_source)
+        element = wait.until(EC.visibility_of_element_located((By.XPATH, "//*[@id='Username']")))
         account = getAccount('Asap')
         userName1 = account['username']
         passwd1 = account['password']
