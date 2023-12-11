@@ -4,12 +4,13 @@ from cnaw.items import CnawItem
 from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
 from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT,get_redis_connection
 import redis
+from cnaw.utils.test import getLatestTime
 class CabycSpider(RedisSpider):
     name = 'cabyc'
     redis_key = "search_cabyc"
     goodDetailBase = "http://cabyceogpsji73sske5nvo45mdrkbz4m3qd3iommf3zaaa6izg3j2cqd.onion/api/goods/detail?gid="
     goodUrlBase="http://cabyceogpsji73sske5nvo45mdrkbz4m3qd3iommf3zaaa6izg3j2cqd.onion/#/detail?gid="
-
+    latest_record = getLatestTime('Cabyc')
     def parse(self, response):
         # 使用 JSON 解析响应内容
         json_response = response.json()
@@ -48,45 +49,48 @@ class CabycSpider(RedisSpider):
         #print(json_response)
         if json_response['code'] == 2000:  # 检查JSON中的code字段是否为2000，以确保响应成功
             data = json_response['data']
-            Title = data['name']  # 获取商品名称
-            Price = data['price']  # 获取商品价格
-            Content=data['intro']
-            Source="Cabyc"
-            Fetch_time = datetime.datetime.now()
-            timestamp=data['ctime']
+            timestamp = data['ctime']
             Publish_time = datetime.datetime.fromtimestamp(timestamp)
-            url=self.goodUrlBase+data['id']
-            Cid=data['cid']
-            if Cid == 1:
-                Type = '数据资源'
-            elif Cid == 2:
-                Type = '服务业务'
-            elif Cid == 3:
-                Type = '虚拟物品'
-            elif Cid == 4:
-                Type = '私人专拍'
-            elif Cid == 5:
-                Type = '卡料CVV'
-            elif Cid == 6:
-                Type = '影视音像'
-            elif Cid == 7:
-                Type = '其它类别'
-            elif Cid == 8:
-                Type = '技术技能'
-            elif Cid == 9:
-                Type = '实体物品'
-            else:
-                Type = '未知'  # 如果 cid 不匹配任何已知情况，可以设置一个默认值
-            item = CnawItem()
-            item['Source'] = Source
-            item['Type'] = Type
-            item['Title'] = Title
-            item['Content'] = Content
-            item['Price'] = Price
-            item['Publish_time'] = Publish_time
-            item['Fetch_time'] = Fetch_time
-            item['Url'] = url
-            yield item
+            if self.latest_record <= Publish_time:
+                Title = data['name']  # 获取商品名称
+                Price = data['price']  # 获取商品价格
+                Content=data['intro']
+                Source="Cabyc"
+                Fetch_time = datetime.datetime.now()
+                #timestamp=data['ctime']
+                #Publish_time = datetime.datetime.fromtimestamp(timestamp)
+                url=self.goodUrlBase+data['id']
+                Cid=data['cid']
+                if Cid == 1:
+                    Type = '数据资源'
+                elif Cid == 2:
+                    Type = '服务业务'
+                elif Cid == 3:
+                    Type = '虚拟物品'
+                elif Cid == 4:
+                    Type = '私人专拍'
+                elif Cid == 5:
+                    Type = '卡料CVV'
+                elif Cid == 6:
+                    Type = '影视音像'
+                elif Cid == 7:
+                    Type = '其它类别'
+                elif Cid == 8:
+                    Type = '技术技能'
+                elif Cid == 9:
+                    Type = '实体物品'
+                else:
+                    Type = '未知'  # 如果 cid 不匹配任何已知情况，可以设置一个默认值
+                item = CnawItem()
+                item['Source'] = Source
+                item['Type'] = Type
+                item['Title'] = Title
+                item['Content'] = Content
+                item['Price'] = Price
+                item['Publish_time'] = Publish_time
+                item['Fetch_time'] = Fetch_time
+                item['Url'] = url
+                yield item
 
         else:
             print("JSON响应失败")

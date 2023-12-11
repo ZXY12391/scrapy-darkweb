@@ -7,6 +7,7 @@ import redis
 from scrapy_redis.spiders import RedisSpider
 from scrapy.linkextractors import LinkExtractor
 from cnaw.spiders.basespider import BaseSpider
+from cnaw.utils.test import check_existence
 class TorrezSpider(BaseSpider,RedisSpider):
     name = "torrez"
     redis_key = "search_torrez"
@@ -54,12 +55,14 @@ class TorrezSpider(BaseSpider,RedisSpider):
             )
 
     def parse_goods_detail(self, response):
-        publish_time = None
-        price = response.xpath("//span[@class='itemPrice']/text()").extract_first()
-        types = response.meta.get('type')
-        title = response.xpath("//div[@class='titleHeader mb-2'][1]/h3/text()").extract_first()
-        url = response.url
         content = response.xpath("//div[@class='tab-pane active']/p/text()").extract_first()
-        source = "Torrez"
-        fetch_time = datetime.datetime.now()
-        yield self.saveData(source, types, title, content, price, publish_time, fetch_time, url)
+        result = check_existence(content, 'Torrez')
+        if result:
+            url = response.url
+            publish_time = None
+            price = response.xpath("//span[@class='itemPrice']/text()").extract_first()
+            types = response.meta.get('type')
+            title = response.xpath("//div[@class='titleHeader mb-2'][1]/h3/text()").extract_first()
+            source = "Torrez"
+            fetch_time = datetime.datetime.now()
+            yield self.saveData(source, types, title, content, price, publish_time, fetch_time, url)

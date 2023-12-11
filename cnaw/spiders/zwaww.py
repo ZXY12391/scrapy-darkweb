@@ -7,10 +7,11 @@ from cnaw.items import CnawItem
 import redis
 from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
 from cnaw.settings import REDIS_DB,REDIS_HOST,REDIS_PORT,REDIS_PARAMS
+from cnaw.utils.test import getLatestTime
 class ZwawwSpider(RedisSpider):
     name = "zwaww"
     redis_key = 'search_zwaww'
-
+    latest_record=getLatestTime('Zwaw')
     def parse(self, response):
         #print(response.text)
         #print(response.url)
@@ -94,25 +95,26 @@ class ZwawwSpider(RedisSpider):
                 callback=self.parse_product_detail,
             )
     def parse_product_detail(self, response):
-
-        texts = response.xpath("/html/body/div/div[3]/t/text()").extract()
-        # print(texts)
-        content = ' '.join(texts)
-        # print(content)
         publish_time = response.xpath("//table[@id='label_info']/tr[3]/td[8]/text()").extract_first()
-        price = response.xpath("//table[@id='label_info']/tr[3]/td[4]/span/text()").extract_first()
-        fetch_time = datetime.datetime.now()
-        type = response.xpath("//table[@class='table_user_text']/tr[2]/td/a[2]/text()").extract_first()
-        title = response.xpath("//table[@class='table_user_text']/tr[2]/td/a[3]/text()").extract_first()
-        url = response.url
-        source = "Zwaw"
-        item = CnawItem()
-        item['Source'] = source
-        item['Type'] = type
-        item['Title'] = title
-        item['Content'] = content
-        item['Price'] = price
-        item['Publish_time'] = publish_time
-        item['Fetch_time'] = fetch_time
-        item['Url'] = url
-        yield item
+        if self.latest_record <= publish_time:
+            texts = response.xpath("/html/body/div/div[3]/t/text()").extract()
+            # print(texts)
+            content = ' '.join(texts)
+            # print(content)
+            #publish_time = response.xpath("//table[@id='label_info']/tr[3]/td[8]/text()").extract_first()
+            price = response.xpath("//table[@id='label_info']/tr[3]/td[4]/span/text()").extract_first()
+            fetch_time = datetime.datetime.now()
+            type = response.xpath("//table[@class='table_user_text']/tr[2]/td/a[2]/text()").extract_first()
+            title = response.xpath("//table[@class='table_user_text']/tr[2]/td/a[3]/text()").extract_first()
+            url = response.url
+            source = "Zwaw"
+            item = CnawItem()
+            item['Source'] = source
+            item['Type'] = type
+            item['Title'] = title
+            item['Content'] = content
+            item['Price'] = price
+            item['Publish_time'] = publish_time
+            item['Fetch_time'] = fetch_time
+            item['Url'] = url
+            yield item

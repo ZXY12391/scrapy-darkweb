@@ -128,7 +128,7 @@ class LoginNemesisMiddleware(LoginMiddleware):
         web = self.setup_webdriver(spider, self.login_url)
         wait = WebDriverWait(web, 100)  # 最长等待时间为10秒
         # 使用显式等待等待元素可见
-        element = wait.until(EC.visibility_of_element_located((By.XPATH, "//a[@class='nav-link fw-bold text-gray-700 text-hover-primary bg-hover-light rounded-1 px-4 py-3']")))
+        #element = wait.until(EC.visibility_of_element_located((By.XPATH, "//a[@class='nav-link fw-bold text-gray-700 text-hover-primary bg-hover-light rounded-1 px-4 py-3']")))
         self.cookie = {item['name']: item['value'] for item in web.get_cookies()}
         print(web.get_cookies())
         # 获取登录后的URL
