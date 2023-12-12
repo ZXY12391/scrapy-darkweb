@@ -3,7 +3,7 @@ import datetime
 from scrapy.linkextractors import LinkExtractor
 from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
 from cnaw.spiders.basespider import BaseSpider
-
+from cnaw.utils.test import check_existence
 class AsapSpider(BaseSpider, RedisSpider):
     name = "asap"
     redis_key = "search_asap"
@@ -26,10 +26,16 @@ class AsapSpider(BaseSpider, RedisSpider):
     def parse_goods_url(self, response):
         a = response.xpath("//div[@class='clr-col-lg-4 clr-col-md-6 card-search-listing']//span[@class='card-media-title']/a/@href").extract()
         for href in a:
-            yield scrapy.Request(
-                url=response.urljoin(href),
-                callback=self.parse_goods_detail,
-            )
+            re = response.urljoin(href)
+            result = check_existence(re, 'Asap')
+            if result == False:
+                yield scrapy.Request(
+                    url=response.urljoin(href),
+                    callback=self.parse_goods_detail,
+                )
+                print(f"没有重复{re}")
+            else:
+                print(f"重复{re}")
 
         # 翻页放在外部循环之后
         page_le = LinkExtractor(restrict_xpaths=("//ul[@class='pagination']/li/a",))

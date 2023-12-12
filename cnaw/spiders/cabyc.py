@@ -54,13 +54,13 @@ class CabycSpider(RedisSpider):
             if self.latest_record <= Publish_time:
                 Title = data['name']  # 获取商品名称
                 Price = data['price']  # 获取商品价格
-                Content=data['intro']
-                Source="Cabyc"
+                Content = data['intro']
+                Source = "Cabyc"
                 Fetch_time = datetime.datetime.now()
-                #timestamp=data['ctime']
-                #Publish_time = datetime.datetime.fromtimestamp(timestamp)
-                url=self.goodUrlBase+data['id']
-                Cid=data['cid']
+                # timestamp=data['ctime']
+                # Publish_time = datetime.datetime.fromtimestamp(timestamp)
+                url = self.goodUrlBase + data['id']
+                Cid = data['cid']
                 if Cid == 1:
                     Type = '数据资源'
                 elif Cid == 2:

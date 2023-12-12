@@ -19,13 +19,13 @@ def getLatestTime(Website):
     else:
         return None  # Handle case where collection is empty or no timestamp field exists
 
-def check_existence(content,Website):
+def check_existence(url,Website):
     client = pymongo.MongoClient(host=MongoDB['host'], port=MongoDB['port'])
     db = client['DW']
     collection = db[Website]
 
     # 构建查询条件
-    query = {'Content': content}
+    query = {'Url': url}
 
     # 在集合中查询是否存在相同内容的数据
     result = collection.find_one(query)
@@ -39,7 +39,9 @@ def check_existence(content,Website):
         #print("不存在相同内容的数据")
         return False
 #print(getLatestTime('Zwaw'))
-content_to_check="http://mmd32xdcmzrdlpoapkpf43dxig5iufbpkkl76qnijgzadythu55fvkqd.onion/items/how-to-buy-ethereum-with-credit-cards-and-paypal-55"
+url="http://mmd32xdcmzrdlpoapkpf43dxig5iufbpkkl76qnijgzadythu55fvkqd.onion/items/ps5-bot-100-working-2020-exlusive-bot"
 Website='Torrez'
-result=check_existence(content_to_check,Website)
+result=check_existence(url,Website)
 print(result)
+if result:
+    print("1")

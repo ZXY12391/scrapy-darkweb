@@ -6,6 +6,7 @@ from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
 from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT,get_redis_connection
 import redis
 from cnaw.spiders.basespider import BaseSpider
+from cnaw.utils.test import check_existence
 class NemesisSpider(BaseSpider,RedisSpider):
     name = "nemesis"
     redis_key = "search_nemesis"
@@ -27,10 +28,16 @@ class NemesisSpider(BaseSpider,RedisSpider):
         for div in divs:
             href=div.xpath("./div/div[1]/div[2]/a/@href").extract_first()
             #print(response.urljoin(href))
-            yield scrapy.Request(
-                url=response.urljoin(href),
-                callback=self.parse_goods_detail,
-            )
+            re = response.urljoin(href)
+            result = check_existence(re, 'Nemesis')
+            if result == False:
+                yield scrapy.Request(
+                    url=response.urljoin(href),
+                    callback=self.parse_goods_detail,
+                )
+                print(f"没有重复{re}")
+            else:
+                print(f"重复{re}")
         #翻页
         page_le = LinkExtractor(restrict_xpaths=("//ul[@class='pagination']/li/a",))
         page_links = page_le.extract_links(response)

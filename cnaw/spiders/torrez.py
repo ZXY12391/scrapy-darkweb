@@ -37,13 +37,19 @@ class TorrezSpider(BaseSpider,RedisSpider):
             type.append(type1)
             type.append(type2)
             # 具体的商品URL解析逻辑
-            yield scrapy.Request(
-                url=response.urljoin(href),
-                callback=self.parse_goods_detail,
-                meta={
-                    'type': type,
-                }
-            )
+            re=response.urljoin(href)
+            result = check_existence(re, 'Torrez')
+            if result==False:
+                yield scrapy.Request(
+                    url=response.urljoin(href),
+                    callback=self.parse_goods_detail,
+                    meta={
+                        'type': type,
+                    }
+                )
+                print(f"没有重复{re}")
+            else:
+                print(f"重复{re}")
 
         # 翻页逻辑
         page_le = LinkExtractor(restrict_xpaths=("//a[@class='page-link']",))
@@ -56,13 +62,11 @@ class TorrezSpider(BaseSpider,RedisSpider):
 
     def parse_goods_detail(self, response):
         content = response.xpath("//div[@class='tab-pane active']/p/text()").extract_first()
-        result = check_existence(content, 'Torrez')
-        if result:
-            url = response.url
-            publish_time = None
-            price = response.xpath("//span[@class='itemPrice']/text()").extract_first()
-            types = response.meta.get('type')
-            title = response.xpath("//div[@class='titleHeader mb-2'][1]/h3/text()").extract_first()
-            source = "Torrez"
-            fetch_time = datetime.datetime.now()
-            yield self.saveData(source, types, title, content, price, publish_time, fetch_time, url)
+        url = response.url
+        publish_time = None
+        price = response.xpath("//span[@class='itemPrice']/text()").extract_first()
+        types = response.meta.get('type')
+        title = response.xpath("//div[@class='titleHeader mb-2'][1]/h3/text()").extract_first()
+        source = "Torrez"
+        fetch_time = datetime.datetime.now()
+        yield self.saveData(source, types, title, content, price, publish_time, fetch_time, url)

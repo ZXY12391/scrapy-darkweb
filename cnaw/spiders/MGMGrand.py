@@ -6,6 +6,7 @@ from scrapy_redis.spiders import RedisSpider  # 导入 RedisSpider
 from cnaw.settings import REDIS_HOST,REDIS_DB,REDIS_PARAMS,REDIS_PORT,get_redis_connection
 import redis
 from cnaw.spiders.basespider import BaseSpider
+from cnaw.utils.test import check_existence
 class MgmgrandSpider(BaseSpider,RedisSpider):
     name = "MGMGrand"
     redis_key = "search_MgmGrand"
@@ -28,10 +29,16 @@ class MgmgrandSpider(BaseSpider,RedisSpider):
         divs=response.xpath("//div[@class='list-products  columns-3']/div")
         for div in divs:
             href=div.xpath("./div[1]/a/@href").extract_first()
-            yield scrapy.Request(
-                url=response.urljoin(href),
-                callback=self.parse_goods_detail,
-            )
+            re = response.urljoin(href)
+            result = check_existence(re, 'MGMGrand')
+            if result == False:
+                yield scrapy.Request(
+                    url=response.urljoin(href),
+                    callback=self.parse_goods_detail,
+                )
+                print(f"没有重复{re}")
+            else:
+                print(f"重复{re}")
             # 翻页
             page_le = LinkExtractor(restrict_xpaths=("//ul[@class='pagination mb-0']/li/a",))
             page_links = page_le.extract_links(response)
