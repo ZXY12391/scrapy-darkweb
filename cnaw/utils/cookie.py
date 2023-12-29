@@ -13,7 +13,7 @@ def ConnectMongo():
 def insert_Cookies_to_mongodb(collection):
     cookies = {
         # 长安不夜城用户名：wenyancabyc密码：Cabycpass1*
-        'cookie_cabyc': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE3MDI0NjUyMTQsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.IuFe5v-s6mVkngAnCZqCQPrClcBIYxR5eogcG5K12kI',
+        'cookie_cabyc': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE3MDMwNjY2NDIsImhpZCI6IjMzNzc3NTc1OSIsImxldmVsIjowfQ.F3yS6_lEsFUpRY7v-y1DNePWZQ6-fwf2jYT63WWUAWc',
         'cookie_kingdom': 'PHPSESSID=b254j4fu5se0q6f61f23jdf54q',
     }
     for key, cookie in cookies.items():

@@ -11,7 +11,7 @@ def ConnectMongo():
 
 def insert_urls_to_mongodb(collection):
     urls = {
-        'search_cabyc': 'http://cabyceogpsji73sske5nvo45mdrkbz4m3qd3iommf3zaaa6izg3j2cqd.onion/api/category/goods?cid=1&page_num=1&page_size=10&order=&order_by=',
+        'search_cabyc': 'http://cabyceogpsji73sske5nvo45mdrkbz4m3qd3iommf3zaaa6izg3j2cqd.onion/api/category/goods?page_num=1&page_size=10&order=&order_by=',
         'search_asap': 'http://asap4g7boedkl3fxbnf2unnnr6kpxnwoewzw4vakaxiuzfdo5xpmy6ad.onion/',
         'search_kingdom': 'http://kingdomm7v6yed55o2rbspvs4exn5bzfxdizqaav27tw6gw4zc65vdad.onion/?t=a006523b031de572',
         'search_MgmGrand': 'http://duysanjqxo4svh35yqkxxe5r54z2xc5tjf6r3ichxd3m2rwcgabf44ad.onion/#subscribe-modal',

@@ -27,7 +27,7 @@ class AsapSpider(BaseSpider, RedisSpider):
         a = response.xpath("//div[@class='clr-col-lg-4 clr-col-md-6 card-search-listing']//span[@class='card-media-title']/a/@href").extract()
         for href in a:
             re = response.urljoin(href)
-            result = check_existence(re, 'Asap')
+            result = check_existence('Url',re, 'Asap')
             if result == False:
                 yield scrapy.Request(
                     url=response.urljoin(href),

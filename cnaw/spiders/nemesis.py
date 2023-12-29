@@ -29,7 +29,7 @@ class NemesisSpider(BaseSpider,RedisSpider):
             href=div.xpath("./div/div[1]/div[2]/a/@href").extract_first()
             #print(response.urljoin(href))
             re = response.urljoin(href)
-            result = check_existence(re, 'Nemesis')
+            result = check_existence('Url',re, 'Nemesis')
             if result == False:
                 yield scrapy.Request(
                     url=response.urljoin(href),

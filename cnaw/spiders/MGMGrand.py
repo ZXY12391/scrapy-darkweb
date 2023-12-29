@@ -30,7 +30,7 @@ class MgmgrandSpider(BaseSpider,RedisSpider):
         for div in divs:
             href=div.xpath("./div[1]/a/@href").extract_first()
             re = response.urljoin(href)
-            result = check_existence(re, 'MGMGrand')
+            result = check_existence('Url',re, 'MGMGrand')
             if result == False:
                 yield scrapy.Request(
                     url=response.urljoin(href),

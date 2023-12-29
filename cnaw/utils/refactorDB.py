@@ -51,11 +51,11 @@ def get_data_count_by_date_range(start_date, end_date, collection):
 
 
 
-collection = ConnectMongo('Nemesis')  # 替换为你的集合名
+collection = ConnectMongo('Cabyc')  # 替换为你的集合名
 remove_duplicate_documents(collection)
 # 调用方法并获取数据数量
-start_date = datetime(2023, 12, 12, 0, 0, 0)  # 替换为你的开始日期和时间
-end_date = datetime(2023, 12, 12, 23, 59, 59)  # 替换为你的结束日期和时间
+start_date = datetime(2023, 12, 18, 0, 0, 0)  # 替换为你的开始日期和时间
+end_date = datetime(2023, 12, 19, 23, 59, 59)  # 替换为你的结束日期和时间
 data_count = get_data_count_by_date_range(start_date, end_date, collection)  # 替换为你的集合名
 
 print(f"从 {start_date} 到 {end_date} 之间的抓取数据数量为: {data_count}")

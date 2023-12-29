@@ -38,7 +38,7 @@ class TorrezSpider(BaseSpider,RedisSpider):
             type.append(type2)
             # 具体的商品URL解析逻辑
             re=response.urljoin(href)
-            result = check_existence(re, 'Torrez')
+            result = check_existence('Url',re, 'Torrez')
             if result==False:
                 yield scrapy.Request(
                     url=response.urljoin(href),
